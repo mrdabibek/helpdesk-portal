@@ -52,9 +52,34 @@ function sendJson(res, statusCode, data) {
   res.end(JSON.stringify(data));
 }
 
+const loginAttempts = new Map();
+
+function checkLoginRateLimit(ip) {
+  const record = loginAttempts.get(ip);
+  if (!record) return true;
+  const now = Date.now();
+  if (now > record.resetAt) {
+    loginAttempts.delete(ip);
+    return true;
+  }
+  return record.count < 10;
+}
+
+function recordFailedLogin(ip) {
+  const now = Date.now();
+  const record = loginAttempts.get(ip) || { count: 0, resetAt: now + 5 * 60 * 1000 };
+  record.count += 1;
+  loginAttempts.set(ip, record);
+}
+
+function resetLoginAttempts(ip) {
+  loginAttempts.delete(ip);
+}
+
 async function handleApi(req, res, url) {
   const method = req.method;
   const user = getAuthUser(req);
+  const clientIp = req.socket?.remoteAddress || '127.0.0.1';
 
   try {
     // 1. Auth routes
@@ -74,15 +99,21 @@ async function handleApi(req, res, url) {
     }
 
     if (url === '/api/auth/login' && method === 'POST') {
+      if (!checkLoginRateLimit(clientIp)) {
+        sendJson(res, 429, { ok: false, error: 'Juda ko‘p urinishlar. Xavfsizlik yuzasidan 5 daqiqadan so‘ng qayta urinib ko‘ring.' });
+        return;
+      }
       const body = await parseJsonBody(req);
       const verified = dbInstance.verifyUser({
         email: body.email,
         password: body.password
       });
       if (!verified) {
-        sendJson(res, 401, { ok: false, error: 'Email yoki parol noto‘g‘ri.' });
+        recordFailedLogin(clientIp);
+        sendJson(res, 401, { ok: false, error: 'Gmail/Login yoki parol noto‘g‘ri.' });
         return;
       }
+      resetLoginAttempts(clientIp);
       const token = dbInstance.createSession(verified.id);
       sendJson(res, 200, { ok: true, token, user: verified });
       return;
@@ -122,6 +153,10 @@ async function handleApi(req, res, url) {
     // 4. Tickets collection: GET, POST
     if (url === '/api/tickets') {
       if (method === 'GET') {
+        if (!user) {
+          sendJson(res, 401, { ok: false, error: 'Murojaatlarni ko‘rish uchun tizimga kiring.' });
+          return;
+        }
         const u = new URL(req.url, 'http://localhost');
         const filter = u.searchParams.get('filter') || 'all';
         const search = u.searchParams.get('search') || '';

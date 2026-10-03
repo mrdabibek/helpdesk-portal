@@ -46,6 +46,41 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
     let clientToken = '';
     let createdTicketId = null;
 
+    let adminToken = '';
+
+    await t.test('POST /api/auth/login - Admin sifatida dabi / 11111111 bilan kirish', async () => {
+      const res = await request(server, '/api/auth/login', 'POST', {
+        email: 'dabi',
+        password: '11111111'
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.equal(res.body.user.name, 'Davlatbek Orzuqulov');
+      assert.equal(res.body.user.role, 'admin');
+      assert.equal(res.body.user.email, 'dabi@gmail.com');
+      assert.ok(res.body.token);
+      adminToken = res.body.token;
+    });
+
+    await t.test('POST /api/auth/login - Admin sifatida dabi@gmail.com bilan kirish', async () => {
+      const res = await request(server, '/api/auth/login', 'POST', {
+        email: 'dabi@gmail.com',
+        password: '11111111'
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.equal(res.body.user.role, 'admin');
+    });
+
+    await t.test('POST /api/auth/login - Noto‘g‘ri parol 401 qaytaradi', async () => {
+      const res = await request(server, '/api/auth/login', 'POST', {
+        email: 'dabi',
+        password: 'wrong_password'
+      });
+      assert.equal(res.status, 401);
+      assert.equal(res.body.ok, false);
+    });
+
     await t.test('POST /api/auth/login - Agent sifatida kirish (Davlatbek Orzuqulov)', async () => {
       const res = await request(server, '/api/auth/login', 'POST', {
         email: 'davlatbek@helpdesk.uz',
@@ -151,6 +186,22 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
       assert.equal(res.status, 200);
       assert.equal(res.body.ok, true);
       assert.equal(res.body.ticket.status, 'closed');
+    });
+
+    await t.test('GET /api/tickets - Ruxsatsiz murojaat 401 qaytaradi', async () => {
+      const res = await request(server, '/api/tickets', 'GET');
+      assert.equal(res.status, 401);
+      assert.equal(res.body.ok, false);
+    });
+
+    await t.test('GET /api/tickets - Admin barcha murojaatlarni to‘liq ko‘radi', async () => {
+      const res = await request(server, '/api/tickets', 'GET', null, {
+        Authorization: `Bearer ${adminToken}`
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.ok(Array.isArray(res.body.tickets));
+      assert.ok(res.body.tickets.length >= 7);
     });
 
   } finally {

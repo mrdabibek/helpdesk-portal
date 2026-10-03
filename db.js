@@ -93,6 +93,20 @@ function createDatabase(filePath = defaultDbPath) {
     seedDatabase(db);
   }
 
+  // Ensure default primary Admin user 'dabi' / 'dabi@gmail.com' exists with password '11111111'
+  const adminExists = db.prepare("SELECT id FROM users WHERE email = 'dabi@gmail.com' OR email = 'dabi'").get();
+  const { hash: adminHash, salt: adminSalt } = hashPassword('11111111');
+  if (!adminExists) {
+    db.prepare(`
+      INSERT INTO users (name, email, password_hash, salt, role, company, avatar_color, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run('Davlatbek Orzuqulov', 'dabi@gmail.com', adminHash, adminSalt, 'admin', 'Yordam Helpdesk', 'mint', Date.now());
+  } else {
+    db.prepare(`
+      UPDATE users SET password_hash = ?, salt = ?, role = 'admin' WHERE id = ?
+    `).run(adminHash, adminSalt, adminExists.id);
+  }
+
   return {
     db,
     // User methods
@@ -125,8 +139,14 @@ function createDatabase(filePath = defaultDbPath) {
     },
 
     verifyUser({ email, password }) {
-      const trimmedEmail = String(email || '').trim().toLowerCase();
-      const user = db.prepare('SELECT * FROM users WHERE email = ?').get(trimmedEmail);
+      const trimmed = String(email || '').trim().toLowerCase();
+      if (!trimmed || !password) return null;
+      const user = db.prepare(`
+        SELECT * FROM users 
+        WHERE email = ? 
+           OR email = ? 
+           OR email = ?
+      `).get(trimmed, trimmed + '@gmail.com', trimmed.replace(/@.*$/, ''));
       if (!user) return null;
       if (!verifyPassword(password, user.password_hash, user.salt)) return null;
       return {
@@ -511,15 +531,16 @@ function applyFiltersAndSort(list, filter, search, sort) {
 function seedDatabase(db) {
   const now = Date.now();
   const defaultUsers = [
-    { name: 'Davlatbek Orzuqulov', email: 'davlatbek@helpdesk.uz', role: 'agent', company: 'Yordam Helpdesk', color: 'mint' },
-    { name: 'Malika Yusupova', email: 'malika@helpdesk.uz', role: 'agent', company: 'Yordam Helpdesk', color: 'mint' },
-    { name: 'Sardor Baxtiyorov', email: 'sardor@helpdesk.uz', role: 'agent', company: 'Yordam Helpdesk', color: 'lilac' },
-    { name: 'Bobur Aliyev', email: 'bobur@helpdesk.uz', role: 'agent', company: 'Yordam Helpdesk', color: 'peach' },
-    { name: 'Azizbek Rahimov', email: 'azizbek@smarttrading.uz', role: 'client', company: 'Smart Trading', color: 'mint' },
-    { name: 'Nodira Toshmatova', email: 'nodira@atlas.uz', role: 'client', company: 'Atlas Studio', color: 'lilac' },
-    { name: 'Jasur Berdiyev', email: 'jasur@novatech.uz', role: 'client', company: 'Nova Tech', color: 'blue' },
-    { name: 'Madina Karimova', email: 'madina@lolamarket.uz', role: 'client', company: 'Lola Market', color: 'lilac' },
-    { name: 'Farrux Ergashev', email: 'farrux@baraka.uz', role: 'client', company: 'Baraka Group', color: 'blue' }
+    { name: 'Davlatbek Orzuqulov', email: 'dabi@gmail.com', password: '11111111', role: 'admin', company: 'Yordam Helpdesk', color: 'mint' },
+    { name: 'Davlatbek Orzuqulov', email: 'davlatbek@helpdesk.uz', password: 'password123', role: 'agent', company: 'Yordam Helpdesk', color: 'mint' },
+    { name: 'Malika Yusupova', email: 'malika@helpdesk.uz', password: 'password123', role: 'agent', company: 'Yordam Helpdesk', color: 'mint' },
+    { name: 'Sardor Baxtiyorov', email: 'sardor@helpdesk.uz', password: 'password123', role: 'agent', company: 'Yordam Helpdesk', color: 'lilac' },
+    { name: 'Bobur Aliyev', email: 'bobur@helpdesk.uz', password: 'password123', role: 'agent', company: 'Yordam Helpdesk', color: 'peach' },
+    { name: 'Azizbek Rahimov', email: 'azizbek@smarttrading.uz', password: 'password123', role: 'client', company: 'Smart Trading', color: 'mint' },
+    { name: 'Nodira Toshmatova', email: 'nodira@atlas.uz', password: 'password123', role: 'client', company: 'Atlas Studio', color: 'lilac' },
+    { name: 'Jasur Berdiyev', email: 'jasur@novatech.uz', password: 'password123', role: 'client', company: 'Nova Tech', color: 'blue' },
+    { name: 'Madina Karimova', email: 'madina@lolamarket.uz', password: 'password123', role: 'client', company: 'Lola Market', color: 'lilac' },
+    { name: 'Farrux Ergashev', email: 'farrux@baraka.uz', password: 'password123', role: 'client', company: 'Baraka Group', color: 'blue' }
   ];
 
   const userIds = {};
@@ -529,7 +550,7 @@ function seedDatabase(db) {
   `);
 
   for (const u of defaultUsers) {
-    const { hash, salt } = hashPassword('password123');
+    const { hash, salt } = hashPassword(u.password || 'password123');
     const res = insertUser.run(u.name, u.email, hash, salt, u.role, u.company, u.color, now);
     userIds[u.name] = Number(res.lastInsertRowid);
   }
