@@ -3,6 +3,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const {handleGemini} = require('./gemini');
+const {handleApi} = require('./api');
 const {applyCors} = require('./cors');
 const root = __dirname;
 try { process.loadEnvFile(path.join(root,'.env')); } catch(err) { if(err.code !== 'ENOENT')console.error('Muhit sozlamalarini o‘qib bo‘lmadi.'); }
@@ -21,6 +22,10 @@ function createServer() {
       return;
     }
     if(health&&['GET','HEAD'].includes(req.method)){res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(req.method==='HEAD'?undefined:JSON.stringify({ready:true,geminiConfigured:Boolean(process.env.GEMINI_API_KEY),uptime:Math.floor(process.uptime())}));return;}
+    if(url.startsWith('/api/')){
+      handleApi(req, res, url);
+      return;
+    }
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405); res.end(); return; }
     if (url === '/') url = '/app/index.html';
     if (url === '/style.css' || url === '/app.js') url = '/app' + url;

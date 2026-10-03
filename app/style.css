@@ -14,3 +14,18 @@ dialog{border:1px solid var(--line);border-radius:18px;padding:26px;width:min(46
 
 .dropzone:has(+ #create-files:focus-visible){outline:3px solid var(--focus);outline-offset:3px}
 @media(max-width:760px){.mode-switch a{min-height:44px;display:flex;align-items:center}.btn,.icon-btn,.back-link,.text-link{min-height:44px}.icon-btn{width:44px}.back-link{align-items:center;display:inline-flex}}
+
+/* Auth modal and user profile styling */
+.user-pill{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--line);border-radius:20px;background:white;cursor:pointer;transition:border-color .15s}
+.user-pill:hover{border-color:var(--green);background:var(--mint)}
+.auth-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.auth-tab{padding:8px 14px;border:none;background:none;font-weight:700;font-size:12px;color:var(--muted);border-radius:6px;cursor:pointer}
+.auth-tab.active{background:var(--mint);color:var(--green)}
+.quick-accounts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.quick-account-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:white;text-align:left;cursor:pointer;transition:.15s}
+.quick-account-btn:hover{background:var(--mint);border-color:var(--green)}
+.quick-account-btn strong{display:block;font-size:12px}
+.quick-account-btn span{font-size:10px;color:var(--muted)}
+.auth-banner{padding:10px 14px;border-radius:8px;background:var(--mint);color:var(--green);font-size:11px;margin-bottom:16px;line-height:1.5}
+.auth-error{padding:10px 14px;border-radius:8px;background:#fde8e8;color:var(--red);font-size:11px;margin-bottom:14px}
+
