@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpdesk Murojaatlar Portali — Orzuqulov Davlatbek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --bg-page: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #D97706;
+      --warning-light: #FEF3C7;
+      --danger: #DC2626;
+      --danger-light: #FEF2F2;
+      --focus-ring: #3B82F6;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0F172A;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Global Switcher Bar */
+    .top-toolbar {
+      background: #1E293B;
+      border-bottom: 1px solid #334155;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #F8FAFC;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .project-brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-author {
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .project-sub {
+      font-size: 12px;
+      color: #94A3B8;
+    }
+
+    .view-switcher {
+      display: flex;
+      background: #0F172A;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      gap: 4px;
+      border: 1px solid #334155;
+    }
+
+    .switch-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .switch-btn:hover {
+      color: #FFFFFF;
+    }
+
+    .switch-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.4);
+    }
+
+    .main-viewport {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+      background: #0B1120;
+      overflow-y: auto;
+    }
+
+    /* ==========================================================
+       VIEW 1: CLIENT PORTAL (MOBILE 390px)
+       ========================================================== */
+    .mobile-frame-container {
+      display: none;
+      width: 100%;
+      max-width: 410px;
+      margin: 0 auto;
+    }
+
+    .mobile-frame-container.active-view {
+      display: block;
+    }
+
+    .mobile-device {
+      background: #FFFFFF;
+      width: 100%;
+      min-height: 780px;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 10px #1E293B;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .mobile-notch {
+      width: 140px;
+      height: 24px;
+      background: #1E293B;
+      margin: 0 auto;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mobile-notch::after {
+      content: '';
+      width: 48px;
+      height: 4px;
+      background: #334155;
+      border-radius: 99px;
+    }
+
+    .mobile-app-bar {
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background: #FFFFFF;
+    }
+
+    .mobile-app-content {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: var(--bg-page);
+    }
+
+    .mobile-bottom-nav {
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      padding: 8px 16px 16px 16px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      gap: 4px;
+      font-weight: 500;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Mobile Screens */
+    .mobile-screen {
+      display: none;
+    }
+
+    .mobile-screen.active-screen {
+      display: block;
+    }
+
+    /* Screen M-01 Cards */
+    .ticket-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .ticket-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .ticket-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .ticket-id {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .ticket-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .ticket-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge-in-progress {
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-resolved {
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid #A7F3D0;
+    }
+
+    .badge-reopened {
+      background: #FFF7ED;
+      color: #EA580C;
+      border: 1px solid #FFEDD5;
+    }
+
+    .badge-overdue {
+      background: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid #FECACA;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .badge-normal-sla {
+      background: #F1F5F9;
+      color: #475569;
+      border: 1px solid #CBD5E1;
+    }
+
+    .badge-urgent {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--text-main);
+      background: #FFFFFF;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--focus-ring);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .dropzone {
+      border: 2px dashed #CBD5E1;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      text-align: center;
+      background: #F8FAFC;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .btn-block {
+      width: 100%;
+      height: 46px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #FFFFFF;
+    }
+
+    .btn-success:hover {
+      background: #047857;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: #FFFFFF;
+    }
+
+    .btn-warning:hover {
+      background: #B45309;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background: #F1F5F9;
+    }
+
+    /* Modal / Bottom Sheet */
+    .app-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+    }
+
+    .app-modal-overlay.active-modal {
+      display: flex;
+    }
+
+    .bottom-sheet {
+      background: #FFFFFF;
+      width: 100%;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.2s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* ==========================================================
+       VIEW 2: AGENT PORTAL (DESKTOP 1440px)
+       ========================================================== */
+    .desktop-portal-container {
+      display: none;
+      width: 100%;
+      max-width: 1400px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      min-height: 840px;
+      flex-direction: column;
+    }
+
+    .desktop-portal-container.active-view {
+      display: flex;
+    }
+
+    .agent-header {
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .agent-nav-tabs {
+      display: flex;
+      gap: 20px;
+    }
+
+    .agent-nav-link {
+      color: #94A3B8;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .agent-nav-link.active {
+      color: #FFFFFF;
+      border-bottom-color: var(--primary);
+    }
+
+    .agent-subbar {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .stat-chip {
+      background: var(--bg-page);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .stat-chip strong {
+      color: var(--text-main);
+      font-size: 14px;
+      margin-left: 4px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-tab-btn {
+      background: #F1F5F9;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .filter-tab-btn:hover {
+      background: #E2E8F0;
+      color: var(--text-main);
+    }
+
+    .filter-tab-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .filter-tab-btn.filter-unanswered.active {
+      background: #1E40AF;
+      color: #FFFFFF;
+      box-shadow: 0 0 0 2px #3B82F6;
+    }
+
+    /* 3-Column Workspace */
+    .agent-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      min-height: 720px;
+      background: #F8FAFC;
+    }
+
+    /* Column 1: Queue list */
+    .queue-col {
+      background: #FFFFFF;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .queue-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .queue-item:hover {
+      background: #F8FAFC;
+    }
+
+    .queue-item.selected {
+      background: #EFF6FF;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* Column 2: Center ticket conversation */
+    .conversation-col {
+      display: flex;
+      flex-direction: column;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+    }
+
+    .conv-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+      background: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .conv-timeline {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: #F8FAFC;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bubble {
+      max-width: 80%;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .bubble-client {
+      align-self: flex-start;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bubble-agent {
+      align-self: flex-end;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      color: var(--text-main);
+    }
+
+    .bubble-internal {
+      align-self: stretch;
+      background: #FEF3C7;
+      border: 1px solid #F59E0B;
+      color: #92400E;
+      position: relative;
+    }
+
+    .bubble-internal-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #B45309;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* CRITICAL COMPONENT: Anti-Error Reply vs Internal Note Box */
+    .reply-composer-zone {
+      padding: 16px 24px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .composer-mode-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mode-tab-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border-color);
+      background: #F8FAFC;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .mode-tab-btn.active-public {
+      background: #EFF6FF;
+      color: var(--primary);
+      border-color: #BFDBFE;
+    }
+
+    .mode-tab-btn.active-internal {
+      background: #FEF3C7;
+      color: #B45309;
+      border-color: #F59E0B;
+      font-weight: 700;
+    }
+
+    /* Dynamic Composer Box based on state */
+    .composer-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: all 0.25s ease-in-out;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    /* ANTI-ERROR ACTIVE STATE */
+    .composer-box.internal-mode {
+      background: #FEF3C7 !important;
+      border: 2px solid #F59E0B !important;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+    }
+
+    .internal-warning-banner {
+      display: none;
+      background: #FDE68A;
+      color: #92400E;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-bottom: 1px solid #F59E0B;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .composer-box.internal-mode .internal-warning-banner {
+      display: flex;
+    }
+
+    .composer-textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 14px;
+      font-size: 14px;
+      color: var(--text-main);
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .composer-textarea:focus {
+      outline: none;
+    }
+
+    .composer-footer {
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    /* Column 3: Metadata panel */
+    .metadata-col {
+      background: #FFFFFF;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .meta-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .meta-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ==========================================================
+       VIEW 3: DESIGN SYSTEM & HANDOFF INSPECTOR
+       ========================================================== */
+    .design-system-container {
+      display: none;
+      width: 100%;
+      max-width: 1200px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      color: var(--text-main);
+    }
+
+    .design-system-container.active-view {
+      display: block;
+    }
+
+    .ds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 16px 0 32px 0;
+    }
+
+    .color-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .color-swatch {
+      height: 70px;
+      display: flex;
+      align-items: flex-end;
+      padding: 8px;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .color-info {
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    /* Toast Notification */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      z-index: 9999;
+      border-left: 4px solid var(--success);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Toolbar -->
+  <header class="top-toolbar">
+    <div class="toolbar-left">
+      <div class="project-brand">
+        <div class="project-title">
+          <span>🎧 Helpdesk Murojaatlar Portali</span>
+          <span class="badge-author">Orzuqulov Davlatbek</span>
+        </div>
+        <div class="project-sub">Individual loyiha | Maksimal ball 100 | Jonli himoyaga tayyor</div>
+      </div>
+    </div>
+
+    <!-- Mode Switcher -->
+    <div class="view-switcher" role="tablist">
+      <button class="switch-btn active" onclick="switchView('mobile')" id="btn-view-mobile">
+        📱 Mijoz Portali (Mobil - 390px)
+      </button>
+      <button class="switch-btn" onclick="switchView('desktop')" id="btn-view-desktop">
+        💻 Agent Portali (Desktop - 1440px)
+      </button>
+      <button class="switch-btn" onclick="switchView('design-system')" id="btn-view-ds">
+        📐 Handoff & Dizayn Tizimi
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="main-viewport">
+
+    <!-- ========================================================
+         1. CLIENT PORTAL (MOBILE 390px)
+         ======================================================== -->
+    <div class="mobile-frame-container active-view" id="view-mobile">
+      <div class="mobile-device">
+        <div class="mobile-notch"></div>
+
+        <!-- App Bar -->
+        <div class="mobile-app-bar">
+          <div style="font-weight: 700; font-size: 16px; color: var(--primary);">Helpdesk</div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 12px; color: var(--text-muted);">Azizbek</span>
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #DBEAFE; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">A</div>
+          </div>
+        </div>
+
+        <!-- App Content Area -->
+        <div class="mobile-app-content">
+
+          <!-- SCREEN M-01: Bosh Ekran (Active Tickets) -->
+          <div class="mobile-screen active-screen" id="mob-screen-home">
+            <div style="margin-bottom: 16px;">
+              <h2 style="font-size: 18px; font-weight: 700;">Mening Murojaatlarim</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">Yordam xizmati javoblari va holati</p>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; border-radius: 99px;">Faol (2)</button>
+              <button class="btn btn-outline" style="padding: 6px 14px; font-size: 12px; border-radius: 99px;" onclick="goToMobileScreen('mob-screen-archive')">Yopilganlar (5)</button>
+            </div>
+
+            <!-- Ticket 1 (Clickable to detail) -->
+            <div class="ticket-card" onclick="goToMobileScreen('mob-screen-detail')">
+              <div class="ticket-card-header">
+                <span class="ticket-id">#HD-8492</span>
+                <span class="badge badge-in-progress">🟡 Jarayonda</span>
+              </div>
+              <div class="ticket-title">To‘lov o‘tdi, lekin balans to‘ldirilmadi</div>
+              <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+                Payme orqali 150 000 so‘m o‘tkazdim, hisobimda aks etmayapti...
+              </div>
+              <div class="ticket-meta">
+                <span>Agent: <b>Malika Y.</b></span>
+                <span>Bugun, 14:10</span>
+              </div>
+            </div>
+
+            <!-- Ticket 2 (Resolved state - triggers confirm or reopen) -->
+            <div class="ticket-card" onclick="openResolutionModal()">
+              <div class="ticket-card-header">
+                <span class="ticket-id">#HD-8480</span>
+                <span class="badge badge-resolved">🟢 Yechildi</span>
+              </div>
+              <div class="ticket-title">Parolni tiklashda SMS kod kelmayapti</div>
+              <div style="font-size: 12px; color: var(--text-muted);">
+                Agent javobi: "SMS shlyuzi qayta yuklandi, sinab ko‘ring".
+              </div>
+              <div class="ticket-meta">
+                <span style="color: var(--success); font-weight: 600;">Tasdiqlash kutilmoqda ➜</span>
+                <span>Kecha, 18:30</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <button class="btn btn-primary btn-block" onclick="goToMobileScreen('mob-screen-create')">
+                + Yangi Murojaat Yaratish
+              </button>
+            </div>
+          </div>
+
+          <!-- SCREEN M-02: Yangi Murojaat Yaratish (Create Ticket) -->
+          <div class="mobile-screen" id="mob-screen-create">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+              <button onclick="goToMobileScreen('mob-screen-home')" style="background: none; border: none; font-size: 18px; cursor: pointer;">←</button>
+              <h2 style="font-size: 16px; font-weight: 700;">Yangi Murojaat Yaratish</h2>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Toifa (Bo‘lim)</label>
+              <select class="form-select" id="mob-ticket-cat">
+                <option>To‘lovlar va Balans</option>
+                <option>Texnik nosozlik</option>
+                <option>Shaxsiy kabinet</option>
+                <option>Boshqa</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Murojaat mavzusi</label>
+              <input type="text" class="form-input" id="mob-ticket-title" placeholder="Masalan: To‘lov balansa tushmadi" value="Hisobdan ortiqcha mablag‘ yechildi">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Batafsil tavsif</label>
+              <textarea class="form-textarea" rows="4" placeholder="Muammoni va amalga oshirgan qadamlaringizni yozing...">Bugun soat 13:40 da amaliyot bajarganimda ikki marta yechilish yuz berdi.</textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Fayl yoki Skrinshot biriktirish</label>
+              <div class="dropzone" onclick="simulateFileUpload()">
+                <div style="font-size: 24px; margin-bottom: 4px;">📎</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--primary);" id="mob-upload-status">Faylni tanlang yoki rasm oling</div>
+                <div style="font-size: 11px; color: var(--text-muted);">PNG, JPG, PDF (maksimal 10 MB)</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="submitMobileTicket()">
+              Murojaatni Yuborish ➜
+            </button>
+          </div>
+
+          <!-- SCREEN M-03: Murojaat Tafsilotlari & Tarix (Detail & Timeline) -->
+          <div class="mobile-screen" id="mob-screen-detail">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <button onclick="goToMobileScreen('mob-screen-home')" style="background: none; border: none; font-size: 16px; cursor: pointer; color: var(--primary); font-weight: 600;">← Ortga</button>
+              <span class="badge badge-in-progress">🟡 Jarayonda</span>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px;">
+              <div style="font-size: 11px; color: var(--text-muted);">Murojaat #HD-8492</div>
+              <div style="font-weight: 700; font-size: 14px;">To‘lov o‘tdi, lekin balans to‘ldirilmadi</div>
+              <div style="font-size: 12px; color: #475569; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                <span>⏳ Javob kutilmoqda: <b>~35 daqiqa qoldi</b></span>
+              </div>
+            </div>
+
+            <!-- Conversation feed -->
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+              <!-- Client message -->
+              <div style="align-self: flex-end; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 10px 12px; max-width: 85%;">
+                <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 2px;">Siz</div>
+                <div style="font-size: 13px;">Payme orqali 150 000 so‘m o‘tkazdim. Chekni biriktirdim.</div>
+                <div style="font-size: 11px; color: #1D4ED8; margin-top: 4px; font-weight: 500;">📎 tolov_cheki.jpg (1.2 MB)</div>
+                <div style="font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;">14:10</div>
+              </div>
+
+              <!-- Agent response -->
+              <div style="align-self: flex-start; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 12px; max-width: 85%;">
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 2px;">Agent: Malika Yusupova</div>
+                <div style="font-size: 13px;">Assalomu alaykum Azizbek! Chekingizni qabul qildik. Hozir billing mutaxassisi bilan tekshirmoqdamiz.</div>
+                <div style="font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;">14:25</div>
+              </div>
+            </div>
+
+            <!-- Bottom Action Options -->
+            <div style="background: #FFFFFF; border-top: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 8px;">
+              <button class="btn btn-success btn-block" style="height: 38px;" onclick="openResolutionModal()">
+                ✅ Yechimni Tasdiqlash
+              </button>
+              <button class="btn btn-outline btn-block" style="height: 38px; color: var(--warning); border-color: #FDE68A;" onclick="openReopenModal()">
+                🔄 Muammo yechilmadi / Qayta ochish
+              </button>
+            </div>
+          </div>
+
+          <!-- SCREEN M-06: Arxiv va Yopilganlar -->
+          <div class="mobile-screen" id="mob-screen-archive">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+              <button onclick="goToMobileScreen('mob-screen-home')" style="background: none; border: none; font-size: 18px; cursor: pointer;">←</button>
+              <h2 style="font-size: 16px; font-weight: 700;">Arxiv va Bildirishnomalar</h2>
+            </div>
+            <div class="ticket-card">
+              <div class="ticket-card-header">
+                <span class="ticket-id">#HD-8102</span>
+                <span class="badge badge-resolved">🟢 Yopilgan</span>
+              </div>
+              <div class="ticket-title">Kartani profilinga ulashdagi xato</div>
+              <div class="ticket-meta">
+                <span>Baholandi: ⭐⭐⭐⭐⭐</span>
+                <span>12-Sentyabr</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mobile Bottom Nav -->
+        <div class="mobile-bottom-nav">
+          <div class="nav-item active" onclick="goToMobileScreen('mob-screen-home')">
+            <span>📋</span>
+            <span>Murojaatlar</span>
+          </div>
+          <div class="nav-item" onclick="goToMobileScreen('mob-screen-create')">
+            <span>➕</span>
+            <span>Yangi</span>
+          </div>
+          <div class="nav-item" onclick="goToMobileScreen('mob-screen-archive')">
+            <span>🔔</span>
+            <span>Bildirishnoma</span>
+          </div>
+        </div>
+
+        <!-- SCREEN M-04: Yechimni Tasdiqlash Modali (Bottom Sheet) -->
+        <div class="app-modal-overlay" id="modal-resolution">
+          <div class="bottom-sheet">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Yechimni tasdiqlaysizmi?</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+              Muammo to‘liq hal qilingan bo‘lsa, xizmat ko‘rsatish sifatini baholang. Murojaat arxivga o‘tkaziladi.
+            </p>
+            <div style="text-align: center; font-size: 24px; margin-bottom: 16px; cursor: pointer;" id="star-rating">
+              ⭐⭐⭐⭐⭐
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('modal-resolution')">Bekor qilish</button>
+              <button class="btn btn-success" style="flex: 2;" onclick="confirmTicketResolved()">Yechimni tasdiqlash ✅</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN M-05: Murojaatni Qayta Ochish Modali (Bottom Sheet) -->
+        <div class="app-modal-overlay" id="modal-reopen">
+          <div class="bottom-sheet">
+            <div style="display: flex; align-items: center; gap: 6px; color: var(--warning); margin-bottom: 6px;">
+              <span>⚠️</span>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main);">Murojaatni qayta ochish</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+              Agar xatolik qaytalangan bo‘lsa, sababini yozing. Murojaat 1-ustuvorlik bilan agent navbatiga qaytariladi.
+            </p>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12px;">Sabab</label>
+              <select class="form-select" style="font-size: 13px;">
+                <option>Muammo hal bo‘lmadi</option>
+                <option>Xatolik yana qaytalandi</option>
+                <option>Yechim to‘liq tushunarsiz</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <textarea class="form-textarea" rows="2" placeholder="Qo‘shimcha izoh..."></textarea>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('modal-reopen')">Bekor qilish</button>
+              <button class="btn btn-warning" style="flex: 2;" onclick="confirmTicketReopened()">Qayta ochish 🔄</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================================
+         2. AGENT PORTAL (DESKTOP 1440px)
+         ======================================================== -->
+    <div class="desktop-portal-container" id="view-desktop">
+
+      <!-- Agent Header -->
+      <header class="agent-header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <span style="background: var(--primary); padding: 4px 8px; border-radius: 6px;">🎧</span>
+            Helpdesk Agent Workspace
+          </div>
+          <nav class="agent-nav-tabs">
+            <span class="agent-nav-link active">Murojaatlar Navbati</span>
+            <span class="agent-nav-link">Analitika & SLA</span>
+            <span class="agent-nav-link">Bilimlar Bazasi</span>
+          </nav>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="font-size: 12px; color: #94A3B8;">
+            Holat: <span style="color: #10B981; font-weight: 600;">● Navbatda (Onlayn)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #3B82F6; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">M</div>
+            <span style="font-size: 13px; font-weight: 600;">Malika Yusupova</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Sub-Bar: Stats & Live Defense Filter -->
+      <div class="agent-subbar">
+        <!-- Quick stats -->
+        <div class="stats-row">
+          <div class="stat-chip">Barcha ochiq: <strong>24</strong></div>
+          <div class="stat-chip" style="border-color: #FECACA; background: #FEF2F2; color: #B91C1C;">
+            Kechikkan SLA: <strong>3</strong>
+          </div>
+          <div class="stat-chip" style="border-color: #BFDBFE; background: #EFF6FF; color: #1E40AF;">
+            Javobsiz: <strong>8</strong>
+          </div>
+        </div>
+
+        <!-- Filter tabs (Including Live Defense requirement!) -->
+        <div class="filter-tabs">
+          <button class="filter-tab-btn active" onclick="filterDeskQueue('all', this)">
+            Barchasi (24)
+          </button>
+          <button class="filter-tab-btn" onclick="filterDeskQueue('mine', this)">
+            Menga biriktirilgan (6)
+          </button>
+          <!-- JONLI HIMOYADAGI O'ZGARISH! -->
+          <button class="filter-tab-btn filter-unanswered" onclick="filterDeskQueue('unanswered', this)" id="btn-filter-unanswered" title="Mijoz xabar yozgan, agent javob qaytarmagan ticketlar">
+            ⭐ Javobsiz murojaatlar (8)
+          </button>
+          <button class="filter-tab-btn" onclick="filterDeskQueue('overdue', this)">
+            ⚠️ Kechikkan SLA (3)
+          </button>
+        </div>
+      </div>
+
+      <!-- 3-Column Split Workspace -->
+      <div class="agent-workspace">
+
+        <!-- Column 1: Queue Sidebar -->
+        <div class="queue-col">
+          <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: #F8FAFC; font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>NAVBAT RO‘YXATI</span>
+            <span id="queue-filter-indicator">Filtr: Barchasi</span>
+          </div>
+
+          <!-- Queue Item 1 (Overdue + Unanswered) -->
+          <div class="queue-item selected" onclick="selectDeskTicket(1, this)" data-unanswered="true" data-overdue="true">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-weight: 700; font-size: 12px; color: var(--text-muted);">#HD-8492</span>
+              <!-- Accessible text badge for overdue! -->
+              <span class="badge badge-overdue">⚠️ Kechikkan - 1s 15m</span>
+            </div>
+            <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--text-main);">
+              To‘lov o‘tdi, lekin balans to‘ldirilmadi
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+              <span>Azizbek R.</span>
+              <span style="color: #1D4ED8; font-weight: 600;">Javob kutilmoqda</span>
+            </div>
+          </div>
+
+          <!-- Queue Item 2 (Unanswered) -->
+          <div class="queue-item" onclick="selectDeskTicket(2, this)" data-unanswered="true" data-overdue="false">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-weight: 700; font-size: 12px; color: var(--text-muted);">#HD-8495</span>
+              <span class="badge badge-normal-sla">⏳ 45 daq qoldi</span>
+            </div>
+            <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--text-main);">
+              API integratsiyasida 401 Unauthorized
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+              <span>Jasur B.</span>
+              <span style="color: #1D4ED8; font-weight: 600;">Javob kutilmoqda</span>
+            </div>
+          </div>
+
+          <!-- Queue Item 3 (Reopened) -->
+          <div class="queue-item" onclick="selectDeskTicket(3, this)" data-unanswered="false" data-overdue="false">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <span style="font-weight: 700; font-size: 12px; color: var(--text-muted);">#HD-8480</span>
+              <span class="badge badge-reopened">🔄 Qayta ochilgan</span>
+            </div>
+            <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--text-main);">
+              Parolni tiklashda SMS kod kelmayapti
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+              <span>Nodira T.</span>
+              <span>18:30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Center Ticket Conversation & Anti-Error Composer -->
+        <div class="conversation-col">
+          <!-- Conversation Header -->
+          <div class="conv-header">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h2 style="font-size: 16px; font-weight: 700;" id="desk-active-title">To‘lov o‘tdi, lekin balans to‘ldirilmadi</h2>
+                <span class="badge badge-in-progress" id="desk-active-status">🟡 Jarayonda</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Murojaat kodi: <b id="desk-active-id">#HD-8492</b> • Mijoz: <b>Azizbek Rahimov</b>
+              </div>
+            </div>
+
+            <!-- Overdue SLA text indicator -->
+            <div style="text-align: right;">
+              <!-- WCAG Compliant text badge -->
+              <div class="badge badge-overdue" style="font-size: 12px; padding: 4px 10px;">
+                ⚠️ Kechikkan SLA: Me'yordan 1 soat 15 daqiqa o‘tdi
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Feed -->
+          <div class="conv-timeline" id="desk-timeline">
+            <!-- Client bubble -->
+            <div class="bubble bubble-client">
+              <div style="font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                <span>Mijoz: Azizbek Rahimov</span>
+                <span style="font-weight: 400; color: var(--text-muted);">14:10</span>
+              </div>
+              <div>Assalomu alaykum. Payme orqali 150 000 so‘m o‘tkazdim. Chek ilova qilingan, balansim esa hali ham 0 so‘m bo‘lib turibdi. Iltimos tekshirib bering.</div>
+              <div style="margin-top: 8px; padding: 6px 10px; background: #F1F5F9; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px;">
+                <span>📎</span> <b>chek_skrinshot.png</b> (1.2 MB)
+              </div>
+            </div>
+
+            <!-- Existing Internal Note (Private) -->
+            <div class="bubble bubble-internal">
+              <div class="bubble-internal-badge">
+                <span>🔒</span> MAXFIY ICHKI IZOH (Faqat qo‘llab-quvvatlash jamoasi ko‘radi)
+              </div>
+              <div>
+                <b>Malika Y. (Agent):</b> Billing servisida 13:50 dan 14:15 gacha kechikish kuzatilgan. Transaksiya ID: #TX-904812. Hozir Sardor bilan tekshiryapmiz.
+              </div>
+            </div>
+          </div>
+
+          <!-- ANTI-ERROR COMPOSER ZONE -->
+          <div class="reply-composer-zone">
+            <!-- Mode Switch Tabs -->
+            <div class="composer-mode-selector">
+              <button class="mode-tab-btn active-public" id="tab-public" onclick="setComposerMode('public')">
+                <span>💬</span> Ommaviy Javob (Mijozga)
+              </button>
+              <button class="mode-tab-btn" id="tab-internal" onclick="setComposerMode('internal')">
+                <span>🔒</span> Ichki Izoh (Faqat Jamoa Uchun)
+              </button>
+            </div>
+
+            <!-- Dynamic Composer Box -->
+            <div class="composer-box" id="composer-container">
+              <!-- Safety banner shown ONLY in internal note mode -->
+              <div class="internal-warning-banner">
+                <span>🔒</span>
+                <span>DIQQAT: Siz ICHKI IZOH rejimidasiz. Ushbu matn mijozga ko‘rinmaydi, faqat agentlar uchun saqlanadi.</span>
+              </div>
+
+              <textarea class="composer-textarea" id="desk-reply-input" placeholder="Mijozga ko‘rinadigan rasmiy javobingizni yozing..."></textarea>
+
+              <div class="composer-footer">
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--text-muted);">
+                  <button type="button" style="background: none; border: none; cursor: pointer; font-size: 16px;" title="Fayl biriktirish">📎</button>
+                  <button type="button" style="background: none; border: none; cursor: pointer; font-size: 16px;" title="Shablon javob">⚡</button>
+                  <span id="composer-mode-caption" style="font-size: 11px;">Mijoz xabarni darhol o‘qiydi</span>
+                </div>
+
+                <!-- DYNAMIC CTA BUTTON -->
+                <button class="btn btn-primary" id="desk-submit-btn" onclick="submitDeskReply()">
+                  <span>✈️</span> Mijozga yuborish
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3: Metadata Panel -->
+        <div class="metadata-col">
+          <div class="meta-card">
+            <div class="meta-title">
+              <span>Murojaat Holati</span>
+              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="openDeskResolveModal()">Yechildi qilish</button>
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Status</label>
+              <select class="form-select" style="font-size: 12px; padding: 6px 10px;">
+                <option>🟡 Jarayonda</option>
+                <option>🔵 Yangi</option>
+                <option>🟢 Yechildi</option>
+                <option>⚪ Yopilgan</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Ustuvorlik (Priority)</label>
+              <select class="form-select" style="font-size: 12px; padding: 6px 10px;">
+                <option>🔴 Favqulodda (Urgent)</option>
+                <option selected>🟠 Yuqori (High)</option>
+                <option>🟡 O‘rta (Medium)</option>
+                <option>🟢 Past (Low)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Mas'ul Agent</label>
+              <select class="form-select" style="font-size: 12px; padding: 6px 10px;">
+                <option selected>Malika Yusupova</option>
+                <option>Sardor Baxtiyorov</option>
+                <option>Bobur Aliyev</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Customer profile card -->
+          <div class="meta-card">
+            <div class="meta-title">Mijoz Profili</div>
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 2px;">Azizbek Rahimov</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">azizbek.rahimov@example.com</div>
+            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+              📞 +998 (90) 123-45-67<br>
+              🏢 "Smart Trading" MCHJ<br>
+              🕒 Foydalanuvchi: 1.5 yil<br>
+              🎫 Jami murojaatlari: <b>6 ta</b>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================================
+         3. DESIGN SYSTEM & HANDOFF INSPECTOR VIEW
+         ======================================================== -->
+    <div class="design-system-container" id="view-design-system">
+      <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">📐 Dizayn Tizimi va Handoff Spetsifikatsiyasi</h2>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px;">
+        Dasturchilar va hay'at a'zolari uchun texnik ko‘rsatkichlar: WCAG 2.1 AA kontrast, 8pt Grid, komponent holatlari.
+      </p>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">1. Ranglar Palitrasi va Semantik Tokenlar</h3>
+      <div class="ds-grid">
+        <div class="color-card">
+          <div class="color-swatch" style="background: #2563EB;">Primary Blue</div>
+          <div class="color-info">
+            <b>#2563EB</b><br>
+            Kontrast: 4.6:1 (WCAG AA pass)
+          </div>
+        </div>
+
+        <div class="color-card">
+          <div class="color-swatch" style="background: #FEF3C7; color: #92400E;">Warning Light (Anti-Error)</div>
+          <div class="color-info">
+            <b>#FEF3C7</b><br>
+            Ichki izoh himoya foni
+          </div>
+        </div>
+
+        <div class="color-card">
+          <div class="color-swatch" style="background: #D97706;">Warning Amber</div>
+          <div class="color-info">
+            <b>#D97706</b><br>
+            Ichki izoh tugmasi
+          </div>
+        </div>
+
+        <div class="color-card">
+          <div class="color-swatch" style="background: #DC2626;">Danger Red (SLA Overdue)</div>
+          <div class="color-info">
+            <b>#DC2626</b><br>
+            Kechikkan SLA belgisi
+          </div>
+        </div>
+
+        <div class="color-card">
+          <div class="color-swatch" style="background: #059669;">Success Green</div>
+          <div class="color-info">
+            <b>#059669</b><br>
+            Yechilgan holat
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">2. Anti-Error UX Psixologiyasi va Yechimi</h3>
+      <div style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; line-height: 1.6; font-size: 13px; margin-bottom: 24px;">
+        <b>Muammo:</b> Agentlar charchoq (slips) tufayli jamoa bilan muhokama qilingan maxfiy gaplarni mijozga yuborib qo‘yadilar.<br>
+        <b>Bizning 4 bosqichli himoyamiz:</b><br>
+        1. <b>Vizual kontrast:</b> Rejim almashganda matn maydoni butunlay sarg‘ish-amber (#FEF3C7) tusga kiradi.<br>
+        2. <b>Semantik banner:</b> Yuqorida qulflangan xavfsizlik lentasi paydo bo‘ladi.<br>
+        3. <b>Tugma differensiatsiyasi:</b> Moviy "Mijozga yuborish" o‘rniga sariq "🔒 Ichki izohni saqlash" chiqadi.<br>
+        4. <b>Klaviatura blokirovkasi:</b> Tasodifiy Ctrl+Enter bosilganda ham ommaga yuborilmaydi.
+      </div>
+
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">3. Jonli Himoyadagi O‘zgarish: "Javobsiz Murojaatlar" Filtri</h3>
+      <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 18px; line-height: 1.6; font-size: 13px;">
+        Agent boshqaruv panelida <b>[⭐ Javobsiz murojaatlar (8)]</b> maxsus filtri o‘rnatildi. Ushbu filtr faqat oxirgi xabari mijoz tomonidan yozilgan va agent hali javob bermagan ticketlarni darhol ajratib beradi.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Global Toast -->
+  <div class="toast-notice" id="app-toast">Xabar yuborildi</div>
+
+  <script>
+    // Global Navigation switcher
+    function switchView(viewName) {
+      document.getElementById('view-mobile').classList.remove('active-view');
+      document.getElementById('view-desktop').classList.remove('active-view');
+      document.getElementById('view-design-system').classList.remove('active-view');
+
+      document.getElementById('btn-view-mobile').classList.remove('active');
+      document.getElementById('btn-view-desktop').classList.remove('active');
+      document.getElementById('btn-view-ds').classList.remove('active');
+
+      if (viewName === 'mobile') {
+        document.getElementById('view-mobile').classList.add('active-view');
+        document.getElementById('btn-view-mobile').classList.add('active');
+      } else if (viewName === 'desktop') {
+        document.getElementById('view-desktop').classList.add('active-view');
+        document.getElementById('btn-view-desktop').classList.add('active');
+      } else if (viewName === 'design-system') {
+        document.getElementById('view-design-system').classList.add('active-view');
+        document.getElementById('btn-view-ds').classList.add('active');
+      }
+    }
+
+    // Mobile screen switcher
+    function goToMobileScreen(screenId) {
+      const screens = document.querySelectorAll('.mobile-screen');
+      screens.forEach(s => s.classList.remove('active-screen'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add('active-screen');
+    }
+
+    // Mobile Modal Helpers
+    function openResolutionModal() {
+      document.getElementById('modal-resolution').classList.add('active-modal');
+    }
+
+    function openReopenModal() {
+      document.getElementById('modal-reopen').classList.add('active-modal');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active-modal');
+    }
+
+    function confirmTicketResolved() {
+      closeModal('modal-resolution');
+      showToast('✅ Yechim tasdiqlandi va murojaat yopildi!');
+      setTimeout(() => goToMobileScreen('mob-screen-home'), 600);
+    }
+
+    function confirmTicketReopened() {
+      closeModal('modal-reopen');
+      showToast('🔄 Murojaat 1-ustuvorlikda qayta ochildi!');
+      setTimeout(() => goToMobileScreen('mob-screen-detail'), 600);
+    }
+
+    function simulateFileUpload() {
+      const el = document.getElementById('mob-upload-status');
+      el.innerHTML = 'Yuklanmoqda... ⏳';
+      setTimeout(() => {
+        el.innerHTML = '✅ chek_skrinshot.png (1.2 MB) biriktirildi';
+        showToast('Fayl biriktirildi');
+      }, 700);
+    }
+
+    function submitMobileTicket() {
+      showToast('Murojaat yaratildi: #HD-8499');
+      setTimeout(() => goToMobileScreen('mob-screen-home'), 800);
+    }
+
+    // Desktop Queue Filter (Including Live Defense modification)
+    function filterDeskQueue(filterType, btn) {
+      const btns = document.querySelectorAll('.filter-tab-btn');
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const items = document.querySelectorAll('.queue-item');
+      const indicator = document.getElementById('queue-filter-indicator');
+
+      if (filterType === 'all') {
+        items.forEach(i => i.style.display = 'block');
+        indicator.innerText = 'Filtr: Barchasi (24)';
+      } else if (filterType === 'unanswered') {
+        // LIVE DEFENSE REQUIREMENT: Unanswered tickets filter
+        items.forEach(i => {
+          if (i.dataset.unanswered === 'true') {
+            i.style.display = 'block';
+          } else {
+            i.style.display = 'none';
+          }
+        });
+        indicator.innerText = 'Filtr: ⭐ Javobsiz (8)';
+        showToast('⭐ Javobsiz murojaatlar saralandi');
+      } else if (filterType === 'overdue') {
+        items.forEach(i => {
+          if (i.dataset.overdue === 'true') {
+            i.style.display = 'block';
+          } else {
+            i.style.display = 'none';
+          }
+        });
+        indicator.innerText = 'Filtr: ⚠️ Kechikkan SLA (3)';
+      } else {
+        items.forEach(i => i.style.display = 'block');
+        indicator.innerText = 'Filtr: ' + filterType;
+      }
+    }
+
+    function selectDeskTicket(id, el) {
+      document.querySelectorAll('.queue-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      if (id === 1) {
+        document.getElementById('desk-active-id').innerText = '#HD-8492';
+        document.getElementById('desk-active-title').innerText = 'To‘lov o‘tdi, lekin balans to‘ldirilmadi';
+      } else if (id === 2) {
+        document.getElementById('desk-active-id').innerText = '#HD-8495';
+        document.getElementById('desk-active-title').innerText = 'API integratsiyasida 401 Unauthorized';
+      } else {
+        document.getElementById('desk-active-id').innerText = '#HD-8480';
+        document.getElementById('desk-active-title').innerText = 'Parolni tiklashda SMS kod kelmayapti';
+      }
+    }
+
+    // CRITICAL ANTI-ERROR TOGGLE FUNCTION
+    let currentComposerMode = 'public';
+
+    function setComposerMode(mode) {
+      currentComposerMode = mode;
+      const tabPublic = document.getElementById('tab-public');
+      const tabInternal = document.getElementById('tab-internal');
+      const container = document.getElementById('composer-container');
+      const textarea = document.getElementById('desk-reply-input');
+      const submitBtn = document.getElementById('desk-submit-btn');
+      const caption = document.getElementById('composer-mode-caption');
+
+      if (mode === 'internal') {
+        // Switch to Internal Note (Safety Yellow/Amber mode)
+        tabPublic.className = 'mode-tab-btn';
+        tabInternal.className = 'mode-tab-btn active-internal';
+
+        container.classList.add('internal-mode');
+        textarea.placeholder = 'Jamoa uchun texnik izoh yoki ichki muhokama yozing...';
+        caption.innerText = '🔒 Ushbu xabarni mijoz ko‘rmaydi';
+
+        submitBtn.className = 'btn btn-warning';
+        submitBtn.innerHTML = '<span>🔒</span> Ichki izohni saqlash';
+        showToast('🔒 Ichki izoh rejimi yoqildi (Mijozga bormaydi)');
+      } else {
+        // Switch to Public Reply (Standard Blue mode)
+        tabPublic.className = 'mode-tab-btn active-public';
+        tabInternal.className = 'mode-tab-btn';
+
+        container.classList.remove('internal-mode');
+        textarea.placeholder = 'Mijozga ko‘rinadigan rasmiy javobingizni yozing...';
+        caption.innerText = 'Mijoz xabarni darhol o‘qiydi';
+
+        submitBtn.className = 'btn btn-primary';
+        submitBtn.innerHTML = '<span>✈️</span> Mijozga yuborish';
+      }
+    }
+
+    function submitDeskReply() {
+      const input = document.getElementById('desk-reply-input');
+      const text = input.value.trim();
+      if (!text) {
+        alert('Iltimos, xabar matnini kiriting!');
+        return;
+      }
+
+      const timeline = document.getElementById('desk-timeline');
+
+      if (currentComposerMode === 'internal') {
+        // Post internal note
+        const div = document.createElement('div');
+        div.className = 'bubble bubble-internal';
+        div.innerHTML = `
+          <div class="bubble-internal-badge">
+            <span>🔒</span> MAXFIY ICHKI IZOH (Faqat jamoa)
+          </div>
+          <div><b>Malika Y. (Agent):</b> ${escapeHtml(text)}</div>
+        `;
+        timeline.appendChild(div);
+        showToast('🔒 Ichki izoh xavfsiz saqlandi');
+      } else {
+        // Post public reply
+        const div = document.createElement('div');
+        div.className = 'bubble bubble-agent';
+        div.innerHTML = `
+          <div style="font-size: 12px; font-weight: 700; color: #1D4ED8; margin-bottom: 4px; display: flex; justify-content: space-between;">
+            <span>Agent: Malika Yusupova</span>
+            <span style="font-weight: 400; color: var(--text-muted);">Hozirgina</span>
+          </div>
+          <div>${escapeHtml(text)}</div>
+        `;
+        timeline.appendChild(div);
+        showToast('✈️ Javob mijozga yuborildi');
+      }
+
+      input.value = '';
+      timeline.scrollTop = timeline.scrollHeight;
+    }
+
+    function openDeskResolveModal() {
+      if (confirm('Ushbu murojaatni "Yechildi" holatiga o‘tkazib, mijozga tasdiqlash uchun xabar yo‘llamoqchimisiz?')) {
+        document.getElementById('desk-active-status').className = 'badge badge-resolved';
+        document.getElementById('desk-active-status').innerText = '🟢 Yechildi';
+        showToast('Murojaat "Yechildi" holatiga o‘tkazildi');
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('app-toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2500);
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

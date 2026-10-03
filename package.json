@@ -1,0 +1,27 @@
+{
+  "name": "helpdesk-murojaatlar-portali",
+  "version": "1.0.0",
+  "description": "Helpdesk Murojaatlar Portali — Orzuqulov Davlatbek (Individual Yakuniy Loyiha)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "build": "npm run build:frontend",
+    "build:frontend": "node scripts/build-frontend.js",
+    "build:backend": "node --check server.js",
+    "start:backend": "node server.js",
+    "preview:frontend": "node scripts/preview-frontend.js"
+  },
+  "engines": {"node": "24.x"},
+  "keywords": [
+    "helpdesk",
+    "ui-ux",
+    "sla-monitoring",
+    "support-portal",
+    "anti-error-ux",
+    "davlatbek-orzuqulov"
+  ],
+  "author": "Orzuqulov Davlatbek",
+  "license": "ISC"
+}

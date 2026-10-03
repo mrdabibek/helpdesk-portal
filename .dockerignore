@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!package.json
+!server.js
+!gemini.js
+!cors.js

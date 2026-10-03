@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpdesk Murojaatlar Portali — Orzuqulov Davlatbek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ====================================================================
+       TOP NAVIGATION BAR & PLATFORM SWITCHER
+       ==================================================================== -->
+
+
+  <!-- ====================================================================
+       MAIN CONTENT VIEWPORT
+       ==================================================================== -->
+  <main class="main-content-area">
+
+    <!-- ------------------------------------------------------------------
+         1. MOBIL MIJOZ PORTALI (390px IPHONE FRAME)
+         ------------------------------------------------------------------ -->
+    <div class="mobile-wrapper active-view" id="view-mobile-wrap">
+      <div class="mobile-shell">
+        <div class="phone-speaker-notch"></div>
+
+        <!-- Mobile Header Bar -->
+        <div class="mobile-app-header">
+          <div style="font-weight: 700; font-size: 16px; color: var(--primary);">Helpdesk Mobil</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 12px; color: var(--text-muted);">Azizbek R.</span>
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #DBEAFE; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;">A</div>
+          </div>
+        </div>
+
+        <!-- Mobile Screens Container -->
+        <div class="mobile-screens-viewport">
+
+          <!-- SCREEN M-01: Bosh Ekran (Faol Murojaatlar Ro'yxati) -->
+          <div class="mobile-screen-view active-screen" id="m-screen-home">
+            <div style="margin-bottom: 14px;">
+              <h2 style="font-size: 18px; font-weight: 700;">Mening Murojaatlarim</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">Yordam xizmati javoblari va joriy holat</p>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; border-radius: 99px;" id="m-active-count-badge">Faol (3)</button>
+              <button class="btn btn-outline" style="padding: 6px 14px; font-size: 12px; border-radius: 99px;" id="m-closed-count-badge" onclick="goToMobileScreen('m-screen-archive')">Yopilganlar (1)</button>
+            </div>
+
+            <!-- Dynamic Tickets List -->
+            <div id="m-active-tickets-list">
+              <!-- Rendered by app.js -->
+            </div>
+
+            <div style="margin-top: 18px;">
+              <button class="btn btn-primary btn-block" onclick="goToMobileScreen('m-screen-create')">
+                + Yangi Murojaat Yaratish
+              </button>
+            </div>
+          </div>
+
+          <!-- SCREEN M-02: Yangi Murojaat Yaratish Shakli -->
+          <div class="mobile-screen-view" id="m-screen-create">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+              <button onclick="goToMobileScreen('m-screen-home')" style="background: none; border: none; font-size: 18px; cursor: pointer;">←</button>
+              <h2 style="font-size: 16px; font-weight: 700;">Yangi Murojaat Yaratish</h2>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label">Toifa (Bo‘lim)</label>
+              <select class="field-select" id="m-create-category">
+                <option>To‘lovlar va Balans</option>
+                <option>Texnik xato</option>
+                <option>Shaxsiy kabinet</option>
+                <option>Hisobotlar</option>
+                <option>Boshqa</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label">Murojaat mavzusi</label>
+              <input type="text" class="field-input" id="m-create-title" placeholder="Masalan: To‘lov hisobga o‘tmadi" value="Hisobdan mablag‘ yechildi, balans to‘ldirilmadi">
+            </div>
+
+            <div class="form-field">
+              <label class="field-label">Batafsil tavsif</label>
+              <textarea class="field-textarea" id="m-create-desc" rows="4" placeholder="Muammo mohiyatini va qadamlaringizni yozing...">Bugun amaliyot bajarganimda to‘lov cheki chiqdi, biroq akkauntdagi balansda ko‘rinmayapti.</textarea>
+            </div>
+
+            <!-- AI SMART TIP BANNER -->
+            <div style="background: var(--ai-purple-light); border: 1px solid var(--ai-purple-border); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 14px; font-size: 11px; color: #5B21B6; display: flex; gap: 8px; align-items: flex-start;">
+              <span style="font-size: 14px;">💡</span>
+              <div><b>AI Maslahati:</b> To‘lov tizimlaridagi kechikishlar ko‘pincha 15 daqiqa ichida hal bo‘ladi. Chek skrinshotini yuklasangiz, agent uni 3 barobar tezroq tasdiqlaydi.</div>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label">Fayl yoki Skrinshot biriktirish</label>
+              <div class="file-dropzone-box" onclick="handleMobileFileUpload()">
+                <div style="font-size: 24px; margin-bottom: 4px;">📎</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--primary);" id="m-dropzone-label">Faylni tanlang yoki rasm oling</div>
+                <div style="font-size: 11px; color: var(--text-muted);">PNG, JPG, PDF (maksimal 10 MB)</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="submitNewMobileTicket()">
+              Murojaatni Yuborish ➜
+            </button>
+          </div>
+
+          <!-- SCREEN M-03: Murojaat Tafsilotlari & Tarix -->
+          <div class="mobile-screen-view" id="m-screen-detail">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <button onclick="goToMobileScreen('m-screen-home')" style="background: none; border: none; font-size: 15px; cursor: pointer; color: var(--primary); font-weight: 600;">← Ortga</button>
+              <span id="m-detail-status-badge" class="badge">🟡 Jarayonda</span>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px;">
+              <div style="font-size: 11px; color: var(--text-muted);" id="m-detail-id">#HD-8492</div>
+              <div style="font-weight: 700; font-size: 14px;" id="m-detail-title">To‘lov o‘tdi, lekin balans to‘ldirilmadi</div>
+              <div style="font-size: 12px; color: #475569; margin-top: 4px;" id="m-detail-sla">
+                ⏳ Javob kutilmoqda: ~35 daqiqa
+              </div>
+            </div>
+
+            <!-- Messages Timeline Feed -->
+            <div id="m-detail-timeline" style="display: flex; flex-direction: column; min-height: 200px;">
+              <!-- Filled by app.js -->
+            </div>
+
+            <!-- Dynamic Action buttons (Reply or Resolve/Reopen) -->
+            <div id="m-detail-action-buttons">
+              <!-- Filled by app.js -->
+            </div>
+          </div>
+
+          <!-- SCREEN M-06: Bildirishnomalar va Arxiv -->
+          <div class="mobile-screen-view" id="m-screen-archive">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+              <button onclick="goToMobileScreen('m-screen-home')" style="background: none; border: none; font-size: 18px; cursor: pointer;">←</button>
+              <h2 style="font-size: 16px; font-weight: 700;">Arxiv va Bildirishnomalar</h2>
+            </div>
+            <div class="m-ticket-card">
+              <div class="m-ticket-header">
+                <span class="m-ticket-id">#HD-8472</span>
+                <span class="badge badge-resolved">🟢 Yopilgan</span>
+              </div>
+              <div class="m-ticket-title">Hisobotlarni Excel formatida yuklab bo‘lmayapti</div>
+              <div class="m-ticket-footer">
+                <span>Baholandi: ⭐⭐⭐⭐⭐</span>
+                <span>02-Oktyabr</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mobile Bottom Tab Bar -->
+        <div class="mobile-bottom-tabs">
+          <div class="tab-touch-item active" id="m-nav-home" onclick="goToMobileScreen('m-screen-home')">
+            <span style="font-size: 16px;">📋</span>
+            <span>Murojaatlar</span>
+          </div>
+          <div class="tab-touch-item" id="m-nav-create" onclick="goToMobileScreen('m-screen-create')">
+            <span style="font-size: 16px;">➕</span>
+            <span>Yangi</span>
+          </div>
+          <div class="tab-touch-item" id="m-nav-archive" onclick="goToMobileScreen('m-screen-archive')">
+            <span style="font-size: 16px;">🔔</span>
+            <span>Bildirishnoma</span>
+          </div>
+        </div>
+
+        <!-- SCREEN M-04: Yechimni Tasdiqlash Modali -->
+        <div class="modal-backdrop-layer" id="m-modal-resolution">
+          <div class="modal-bottom-sheet">
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Muammo to‘liq hal bo‘ldimi?</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+              Xizmat ko‘rsatish sifatini baholang. Tasdiqlaganingizdan so‘ng murojaat yopiladi.
+            </p>
+            <div style="text-align: center; font-size: 26px; margin-bottom: 16px; cursor: pointer;">
+              ⭐⭐⭐⭐⭐
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('m-modal-resolution')">Bekor qilish</button>
+              <button class="btn btn-success" style="flex: 2;" onclick="confirmClientResolution()">Tasdiqlash va Yopish ✅</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN M-05: Murojaatni Qayta Ochish Modali -->
+        <div class="modal-backdrop-layer" id="m-modal-reopen">
+          <div class="modal-bottom-sheet">
+            <div style="display: flex; align-items: center; gap: 6px; color: var(--warning); margin-bottom: 6px;">
+              <span>⚠️</span>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main);">Murojaatni qayta ochish</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+              Muammo yechilmagan bo‘lsa, u 1-ustuvorlik bilan agent navbatining eng yuqorisiga chiqariladi.
+            </p>
+            <div class="form-field">
+              <label class="field-label" style="font-size: 12px;">Sabab</label>
+              <select class="field-select" style="font-size: 13px;">
+                <option>Muammo hal bo‘lmadi</option>
+                <option>Xatolik yana qaytalandi</option>
+                <option>Yechim to‘liq tushunarsiz</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('m-modal-reopen')">Bekor qilish</button>
+              <button class="btn btn-warning" style="flex: 2;" onclick="confirmClientReopen()">Qayta ochish 🔄</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ------------------------------------------------------------------
+         2. DESKTOP AGENT PORTALI (1440px FULL WORKSPACE)
+         ------------------------------------------------------------------ -->
+    <div class="desktop-wrapper" id="view-desktop-wrap">
+
+      <!-- Desktop Header -->
+      <header class="desk-topbar">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <span style="background: var(--primary); padding: 4px 8px; border-radius: 6px;">🎧</span>
+            Helpdesk Agent Portal
+            <span class="author-chip" style="font-size: 11px; padding: 2px 8px;">Orzuqulov Davlatbek</span>
+          </div>
+          <div style="font-size: 13px; color: #94A3B8; font-weight: 500;">
+            Navbat Boshqaruvi & SLA Monitoring
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="desk-status-pill">
+            ● Navbatda (Onlayn)
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: #3B82F6; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">M</div>
+            <span style="font-size: 13px; font-weight: 600;">Malika Yusupova (Tier 1 Support)</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- KPI and Filters Bar -->
+      <div class="desk-kpi-subbar">
+        <div class="desk-kpi-chips">
+          <div class="kpi-chip">Barcha ochiq: <strong id="kpi-total-open">4</strong></div>
+          <div class="kpi-chip" style="background: var(--danger-light); border-color: var(--danger-border); color: #B91C1C;">
+            Kechikkan SLA: <strong id="kpi-overdue">1</strong>
+          </div>
+          <div class="kpi-chip" style="background: var(--primary-light); border-color: var(--primary-border); color: #1E40AF;">
+            Javobsiz: <strong id="kpi-unanswered">2</strong>
+          </div>
+        </div>
+
+        <!-- Filter Tabs (Including Live Defense requirement!) -->
+        <div class="desk-filters-row">
+          <button class="desk-filter-btn active" onclick="filterDeskQueue('all', this)">
+            Barchasi
+          </button>
+          <button class="desk-filter-btn" onclick="filterDeskQueue('mine', this)">
+            Menga biriktirilgan
+          </button>
+          <!-- JONLI HIMOYADAGI ASOSIY TALAB! -->
+          <button class="desk-filter-btn unanswered-filter" id="filter-unanswered-badge" onclick="filterDeskQueue('unanswered', this)" title="Faqat mijoz xabar yozgan va agent javob qaytarmagan murojaatlar">
+            ⭐ Javobsiz murojaatlar (2)
+          </button>
+          <button class="desk-filter-btn" onclick="filterDeskQueue('overdue', this)">
+            ⚠️ Kechikkan SLA
+          </button>
+        </div>
+      </div>
+
+      <!-- 3-Column Split Workspace -->
+      <div class="desk-split-workspace">
+
+        <!-- Column 1: Queue Sidebar -->
+        <div class="desk-queue-col">
+          <div class="desk-queue-header">
+            <span>MUROJAATLAR NAVBATI</span>
+            <span>Tartib: Shoshilinch</span>
+          </div>
+          <div id="desk-queue-items">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <!-- Column 2: Center Conversation Feed & Anti-Error Composer -->
+        <div class="desk-conversation-col">
+          <!-- Conversation Header -->
+          <div class="conv-topbar">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h2 style="font-size: 16px; font-weight: 700;" id="desk-ticket-title">To‘lov o‘tdi, lekin balans to‘ldirilmadi</h2>
+                <span class="badge badge-in-progress" id="desk-ticket-status-badge">🟡 Jarayonda</span>
+                <!-- AI SENTIMENT BADGE -->
+                <span id="desk-ticket-sentiment-badge" class="sentiment-chip sentiment-frustrated">😡 88% Xavf</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Murojaat: <b id="desk-ticket-id">#HD-8492</b> • Mijoz: <b id="desk-ticket-client-name">Azizbek Rahimov</b> (<span id="desk-ticket-company">Smart Trading</span>)
+              </div>
+            </div>
+
+            <!-- Overdue SLA text indicator (WCAG compliant) -->
+            <div id="desk-ticket-sla-header">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+
+          <!-- Messages Feed -->
+          <div class="conv-messages-feed" id="desk-timeline-feed">
+            <!-- Messages rendered by app.js -->
+          </div>
+
+          <!-- CRITICAL ANTI-ERROR COMPOSER ZONE -->
+          <div class="desk-composer-zone">
+            <!-- Toggle Tabs -->
+            <div class="composer-toggle-tabs" style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; gap: 8px;">
+                <button class="composer-tab active-public" id="desk-tab-public" onclick="setComposerMode('public')">
+                  <span>💬</span> Ommaviy Javob (Mijozga)
+                </button>
+                <button class="composer-tab" id="desk-tab-internal" onclick="setComposerMode('internal')">
+                  <span>🔒</span> Ichki Izoh (Faqat Jamoa Uchun)
+                </button>
+              </div>
+
+              <!-- AI COPILOT REPLY BUTTON -->
+              <button class="btn btn-ai-magic" onclick="triggerAiCopilotReply()" title="AI mijoz dardiga qarab professional tayyor javob yozib beradi">
+                <span>✨</span> AI Javob Taklif Qilish
+              </button>
+            </div>
+
+            <!-- Dynamic Fail-Safe Box -->
+            <div class="composer-box-container" id="desk-composer-box">
+              <!-- Safety banner shown ONLY in internal note mode -->
+              <div class="internal-alert-strip">
+                <span>🔒</span>
+                <span>MAXFIY ICHKI IZOH: Bu xabarni faqat jamoa a’zolari ko‘radi. Mijozga yuborilmaydi!</span>
+              </div>
+
+              <textarea class="composer-textarea-field" id="desk-composer-input" placeholder="Mijozga ko‘rinadigan rasmiy javobingizni yozing..."></textarea>
+
+              <div class="composer-actions-bottom">
+                <div style="display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--text-muted);">
+                  <button type="button" style="background: none; border: none; cursor: pointer; font-size: 16px;" title="Fayl biriktirish">📎</button>
+                  <button type="button" style="background: none; border: none; cursor: pointer; font-size: 16px;" title="Shablon javob">⚡</button>
+                  <span id="desk-composer-caption" style="font-size: 11px;">Mijoz xabarni darhol ko‘radi</span>
+                </div>
+
+                <!-- DYNAMIC CTA BUTTON -->
+                <button class="btn btn-primary" id="desk-composer-submit-btn" onclick="submitDeskMessage()">
+                  <span>✈️</span> Mijozga yuborish
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Column 3: Metadata Panel -->
+        <div class="desk-meta-col">
+          <!-- AI SMART SUMMARY WIDGET -->
+          <div class="ai-summary-widget">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="ai-pill-badge">✨ AI Smart Xulosa</span>
+              <button onclick="refreshAiSummary()" style="background: none; border: none; font-size: 11px; color: var(--ai-purple); cursor: pointer; font-weight: 600;">🔄 Yangilash</button>
+            </div>
+            <div id="desk-ai-summary-text" style="font-size: 12px; color: #4C1D95; line-height: 1.5; font-weight: 500;">
+              Mijoz Paymedan 150 000 so‘m o‘tkazgan, lekin balans to‘ldirilmagan. Billing servisida 502 xatolik sabab to‘xtagan. Hozir Sardor tekshirmoqda.
+            </div>
+          </div>
+
+          <div class="meta-widget">
+            <div class="meta-widget-title">
+              <span>Murojaat Holati</span>
+              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="resolveTicketFromDesk()">Yechildi qilish</button>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label" style="font-size: 11px;">Status</label>
+              <select class="field-select" id="desk-select-status" style="font-size: 12px; padding: 6px 10px;" onchange="updateTicketMetadata('status', this.value)">
+                <option value="Yangi">🔵 Yangi</option>
+                <option value="Jarayonda">🟡 Jarayonda</option>
+                <option value="Yechildi">🟢 Yechildi</option>
+                <option value="Qayta ochilgan">🔄 Qayta ochilgan</option>
+                <option value="Yopildi">⚪ Yopildi</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label" style="font-size: 11px;">Ustuvorlik (Priority)</label>
+              <select class="field-select" id="desk-select-priority" style="font-size: 12px; padding: 6px 10px;" onchange="updateTicketMetadata('priority', this.value)">
+                <option value="Favqulodda">🔴 Favqulodda (Urgent)</option>
+                <option value="Yuqori">🟠 Yuqori (High)</option>
+                <option value="O‘rta">🟡 O‘rta (Medium)</option>
+                <option value="Past">🟢 Past (Low)</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="field-label" style="font-size: 11px;">Mas'ul Agent</label>
+              <select class="field-select" id="desk-select-assignee" style="font-size: 12px; padding: 6px 10px;" onchange="updateTicketMetadata('assignee', this.value)">
+                <option value="Malika Yusupova">Malika Yusupova</option>
+                <option value="Sardor Baxtiyorov">Sardor Baxtiyorov</option>
+                <option value="Bobur Aliyev">Bobur Aliyev</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Customer details -->
+          <div class="meta-widget">
+            <div class="meta-widget-title">Mijoz Ma'lumotlari</div>
+            <div style="font-size: 14px; font-weight: 700; margin-bottom: 2px;" id="desk-client-full-name">Azizbek Rahimov</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;" id="desk-client-email">azizbek.rahimov@example.com</div>
+            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.8;">
+              📞 Tel: <b id="desk-client-phone">+998 (90) 123-45-67</b><br>
+              🏢 Tashkilot: <b id="desk-client-company-detail">"Smart Trading" MCHJ</b><br>
+              🕒 Xizmatda: <b>1.5 yil</b><br>
+              🎫 Jami murojaatlari: <b>6 ta</b>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ------------------------------------------------------------------
+         3. FIGMA MAKETLARI & UI KIT SHOWCASE VIEW
+         ------------------------------------------------------------------ -->
+    <div class="figma-showcase-wrapper" id="view-figma-wrap">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 22px; font-weight: 700;">🎨 Figma Uchun Tayyor Vizual Maketlar va UI Kit</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">
+            Figma faylingizga to‘g‘ridan-to‘g‘ri ko‘chirib olish (copy-paste) yoki import qilish uchun tayyor vektor komponentlar va ekranlar.
+          </p>
+        </div>
+        <div>
+          <a href="../figma_assets/FIGMA_QOLLANMA.md" target="_blank" class="btn btn-outline" style="font-size: 12px;">
+            📄 Figma Import Qo‘llanmasi
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick summary of screens -->
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">1. Loyihadagi 13 ta Asosiy Ekran Ro‘yxati</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 28px;">
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px; background: var(--bg-page);">
+          <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px;">📱 Mobil Mijoz (6 ta ekran)</div>
+          <ul style="font-size: 12px; color: var(--text-main); line-height: 1.7; padding-left: 18px;">
+            <li>M-01: Boshqaruv / Faol Murojaatlar Ro‘yxati</li>
+            <li>M-02: Yangi Murojaat Yaratish (+ Fayl yuklash)</li>
+            <li>M-03: Murojaat Tafsilotlari & Suhbat Tarixi</li>
+            <li>M-04: Yechimni Tasdiqlash & Baholash Modali</li>
+            <li>M-05: Murojaatni Qayta Ochish (Reopen) Ekrani</li>
+            <li>M-06: Bildirishnomalar va Arxiv Markazi</li>
+          </ul>
+        </div>
+
+        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px; background: var(--bg-page);">
+          <div style="font-weight: 700; color: #1E40AF; margin-bottom: 4px;">💻 Desktop Agent (7 ta ekran)</div>
+          <ul style="font-size: 12px; color: var(--text-main); line-height: 1.7; padding-left: 18px;">
+            <li>D-01: Agent Dashboard va Navbat (Inbox)</li>
+            <li>D-02: "Javobsiz Murojaatlar" Maxsus Filtri (Jonli himoya)</li>
+            <li>D-03: 3-Ustunli Split-Screen Ish Maydoni</li>
+            <li>D-04: Ommaviy Javob (Public Reply) Rejimi</li>
+            <li>D-05: Ichki Izoh (Internal Note) Anti-Error Rejimi</li>
+            <li>D-06: Ustuvorlik, Mas'ul va SLA Boshqaruvi</li>
+            <li>D-07: Yechildi Deb Belgilash Modali</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Live Component Matrix Showcase -->
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">2. Figma Komponent Variantlari (UI Kit Matrix)</h3>
+      <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 12px;">A) Holat va SLA Nishonlari (Badges):</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+          <span class="badge badge-normal-sla">🔵 Yangi</span>
+          <span class="badge badge-in-progress">🟡 Jarayonda</span>
+          <span class="badge badge-resolved">🟢 Yechildi</span>
+          <span class="badge badge-reopened">🔄 Qayta ochilgan</span>
+          <!-- WCAG OVERDUE -->
+          <span class="badge badge-overdue">⚠️ Kechikkan - 1s 15m</span>
+          <span class="badge badge-normal-sla">⏳ 45 daq qoldi</span>
+        </div>
+
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 12px;">B) Anti-Error CTA Tugmalari:</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-primary"><span>✈️</span> Mijozga yuborish (Primary Blue)</button>
+          <button class="btn btn-warning"><span>🔒</span> Ichki izohni saqlash (Amber Safe)</button>
+          <button class="btn btn-success"><span>✅</span> Yechimni tasdiqlash</button>
+          <button class="btn btn-outline">Bekor qilish</button>
+        </div>
+      </div>
+
+      <!-- Figma Import Instructions -->
+      <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 18px;">
+        <h4 style="font-size: 14px; font-weight: 700; color: #1E40AF; margin-bottom: 6px;">Figma Fayliga Ko‘chirish Bo‘yicha 1 Daqiqalik Yo‘riqnoma:</h4>
+        <ol style="font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 20px;">
+          <li>Figma dasturida yangi fayl oching: <b>Helpdesk Murojaatlar Portali — Orzuqulov Davlatbek</b></li>
+          <li>Loyiha papkangizdagi <a href="../figma_assets/ui_kit.svg" target="_blank" style="color: var(--primary); font-weight: 600;">figma_assets/ui_kit.svg</a> faylini to‘g‘ridan-to‘g‘ri Figma freymiga sudrab tashlang (Drag & Drop).</li>
+          <li>Figma avtomatik ravishda barcha vektor qatlamlar, ranglar va nishonlarni tahrirlanadigan shaklda ochib beradi.</li>
+          <li>Shuningdek, Figma uchun <b>html.to.design</b> bepul plaginidan foydalanib, ushbu ilovani brauzerdan 1 soniyada to‘liq freym ko‘rinishida import qilishingiz mumkin!</li>
+        </ol>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Global Toast Alert -->
+  <div class="app-toast-alert" id="global-toast">Bildirishnoma</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

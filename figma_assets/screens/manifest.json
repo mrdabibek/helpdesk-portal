@@ -1,0 +1,116 @@
+[
+  {
+    "id": "A-01",
+    "hash": "dashboard",
+    "width": 1440,
+    "height": 1394
+  },
+  {
+    "id": "A-02",
+    "hash": "queue",
+    "width": 1440,
+    "height": 1131
+  },
+  {
+    "id": "A-03",
+    "hash": "unanswered",
+    "width": 1440,
+    "height": 1034
+  },
+  {
+    "id": "A-04",
+    "hash": "ticket/8492",
+    "width": 1440,
+    "height": 1187
+  },
+  {
+    "id": "A-05",
+    "hash": "ticket/8492/internal",
+    "width": 1440,
+    "height": 1187
+  },
+  {
+    "id": "A-06",
+    "hash": "ticket/8492/preview",
+    "width": 1440,
+    "height": 1187
+  },
+  {
+    "id": "A-07",
+    "hash": "team",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "id": "A-08",
+    "hash": "reports",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "id": "A-09",
+    "hash": "sla",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "id": "M-01",
+    "hash": "client/home",
+    "width": 390,
+    "height": 1018
+  },
+  {
+    "id": "M-02",
+    "hash": "client/list",
+    "width": 390,
+    "height": 941
+  },
+  {
+    "id": "M-03",
+    "hash": "client/create",
+    "width": 390,
+    "height": 1016
+  },
+  {
+    "id": "M-04",
+    "hash": "client/created/8496",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "id": "M-05",
+    "hash": "client/ticket/8492",
+    "width": 390,
+    "height": 920
+  },
+  {
+    "id": "M-06",
+    "hash": "client/resolution/8482",
+    "width": 390,
+    "height": 1013
+  },
+  {
+    "id": "M-07",
+    "hash": "client/reopen/8472",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "id": "M-08",
+    "hash": "client/notifications",
+    "width": 390,
+    "height": 1078
+  },
+  {
+    "id": "M-09",
+    "hash": "client/knowledge",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "id": "M-10",
+    "hash": "client/article/0",
+    "width": 390,
+    "height": 844
+  }
+]

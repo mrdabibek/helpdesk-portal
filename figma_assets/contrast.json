@@ -1,0 +1,51 @@
+[
+  {
+    "label": "primary button",
+    "foreground": "#FFFFFF",
+    "background": "#17634D",
+    "ratio": 7.17,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "body",
+    "foreground": "#25352E",
+    "background": "#FFFFFF",
+    "ratio": 12.9,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "muted",
+    "foreground": "#66736C",
+    "background": "#FFFFFF",
+    "ratio": 4.96,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "internal",
+    "foreground": "#855412",
+    "background": "#FFF0D4",
+    "ratio": 5.7,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "overdue",
+    "foreground": "#B13B32",
+    "background": "#F9ECE9",
+    "ratio": 5.14,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "new",
+    "foreground": "#345A99",
+    "background": "#EAF0FA",
+    "ratio": 5.98,
+    "normal_text_4_5": true
+  },
+  {
+    "label": "reopened",
+    "foreground": "#705295",
+    "background": "#EFEAFA",
+    "ratio": 5.35,
+    "normal_text_4_5": true
+  }
+]
