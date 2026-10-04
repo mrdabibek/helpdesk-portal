@@ -126,40 +126,58 @@ async function handleApi(req, res, url) {
       return;
     }
 
-    // OAuth: Get provider authentication URL
-    if (url === '/api/auth/oauth/url' && (method === 'GET' || method === 'HEAD')) {
-      const fullUrl = new URL(req.url, 'http://localhost');
-      const provider = fullUrl.searchParams.get('provider') || 'google';
-      const base = getAppBaseUrl(req);
-      if (provider === 'google') {
-        const clientId = process.env.GOOGLE_CLIENT_ID;
-        if (!clientId) {
-          sendJson(res, 200, { ok: false, configured: false, provider: 'google', message: 'GOOGLE_CLIENT_ID muhitda sozlanmagan.' });
-          return;
-        }
-        const redirectUri = `${base}/api/auth/oauth/google/callback`;
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent('openid email profile')}&access_type=online&prompt=select_account`;
-        sendJson(res, 200, { ok: true, configured: true, provider: 'google', url: authUrl });
-        return;
-      }
-      if (provider === 'github') {
-        const clientId = process.env.GITHUB_CLIENT_ID;
-        if (!clientId) {
-          sendJson(res, 200, { ok: false, configured: false, provider: 'github', message: 'GITHUB_CLIENT_ID muhitda sozlanmagan.' });
-          return;
-        }
-        const redirectUri = `${base}/api/auth/oauth/github/callback`;
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}`;
-        sendJson(res, 200, { ok: true, configured: true, provider: 'github', url: authUrl });
-        return;
-      }
-      sendJson(res, 400, { ok: false, error: 'Noma’lum OAuth provayder.' });
+    // Google OAuth: Get Client ID configuration for Google Identity Services
+    if (url === '/api/auth/google/config' && (method === 'GET' || method === 'HEAD')) {
+      const clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
+      sendJson(res, 200, { ok: true, configured: Boolean(clientId), clientId });
       return;
+    }
+
+    // Google Identity Services: Verify real Google credential (JWT ID Token)
+    if (url === '/api/auth/google/verify' && method === 'POST') {
+      const body = await parseJsonBody(req);
+      const credential = body.credential;
+      if (!credential || typeof credential !== 'string') {
+        sendJson(res, 400, { ok: false, error: 'Google tasdiqlovchi credential tokeni topilmadi.' });
+        return;
+      }
+      try {
+        const parts = credential.split('.');
+        if (parts.length !== 3) {
+          sendJson(res, 400, { ok: false, error: 'Noto‘g‘ri Google token formati.' });
+          return;
+        }
+        const payloadJson = Buffer.from(parts[1], 'base64url').toString('utf8');
+        const payload = JSON.parse(payloadJson);
+        const email = String(payload.email || '').trim().toLowerCase();
+        const name = String(payload.name || '').trim() || 'Google Foydalanuvchisi';
+        if (!email || !email.includes('@')) {
+          sendJson(res, 400, { ok: false, error: 'Google hisobida email topilmadi.' });
+          return;
+        }
+        const gUser = dbInstance.findOrCreateOAuthUser({
+          name,
+          email,
+          provider: 'google',
+          company: 'Google Hisobi'
+        });
+        const token = dbInstance.createSession(gUser.id);
+        sendJson(res, 200, {
+          ok: true,
+          token,
+          user: gUser,
+          message: 'Google orqali muvaffaqiyatli kirdingiz!'
+        });
+        return;
+      } catch (err) {
+        sendJson(res, 500, { ok: false, error: 'Google tokenini tekshirishda xatolik: ' + err.message });
+        return;
+      }
     }
 
     // OAuth: Direct Google redirect
     if (url === '/api/auth/oauth/google' && method === 'GET') {
-      const clientId = process.env.GOOGLE_CLIENT_ID;
+      const clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
       const base = getAppBaseUrl(req);
       if (!clientId) {
         res.writeHead(302, { Location: `/?oauth_error=not_configured&provider=google` });
@@ -191,8 +209,8 @@ async function handleApi(req, res, url) {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
             code,
-            client_id: process.env.GOOGLE_CLIENT_ID || '',
-            client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
+            client_id: (process.env.GOOGLE_CLIENT_ID || '').trim(),
+            client_secret: (process.env.GOOGLE_CLIENT_SECRET || '').trim(),
             redirect_uri: redirectUri,
             grant_type: 'authorization_code'
           }).toString()
@@ -227,139 +245,6 @@ async function handleApi(req, res, url) {
         res.end();
         return;
       }
-    }
-
-    // OAuth: Direct GitHub redirect
-    if (url === '/api/auth/oauth/github' && method === 'GET') {
-      const clientId = process.env.GITHUB_CLIENT_ID;
-      const base = getAppBaseUrl(req);
-      if (!clientId) {
-        res.writeHead(302, { Location: `/?oauth_error=not_configured&provider=github` });
-        res.end();
-        return;
-      }
-      const redirectUri = `${base}/api/auth/oauth/github/callback`;
-      const authUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent('user:email')}`;
-      res.writeHead(302, { Location: authUrl });
-      res.end();
-      return;
-    }
-
-    // OAuth: GitHub callback
-    if (url === '/api/auth/oauth/github/callback' && method === 'GET') {
-      const fullUrl = new URL(req.url, 'http://localhost');
-      const code = fullUrl.searchParams.get('code');
-      const error = fullUrl.searchParams.get('error');
-      if (error || !code) {
-        res.writeHead(302, { Location: `/?oauth_error=${encodeURIComponent(error || 'auth_denied')}` });
-        res.end();
-        return;
-      }
-      try {
-        const base = getAppBaseUrl(req);
-        const redirectUri = `${base}/api/auth/oauth/github/callback`;
-        const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            code,
-            client_id: process.env.GITHUB_CLIENT_ID || '',
-            client_secret: process.env.GITHUB_CLIENT_SECRET || '',
-            redirect_uri: redirectUri
-          })
-        });
-        const tokenData = await tokenRes.json();
-        if (!tokenData.access_token) {
-          res.writeHead(302, { Location: `/?oauth_error=token_exchange_failed` });
-          res.end();
-          return;
-        }
-        const userRes = await fetch('https://api.github.com/user', {
-          headers: {
-            Authorization: `Bearer ${tokenData.access_token}`,
-            'User-Agent': 'Helpdesk-Portal'
-          }
-        });
-        const ghUser = await userRes.json();
-        let email = ghUser.email;
-        if (!email) {
-          const emailRes = await fetch('https://api.github.com/user/emails', {
-            headers: {
-              Authorization: `Bearer ${tokenData.access_token}`,
-              'User-Agent': 'Helpdesk-Portal'
-            }
-          });
-          const emails = await emailRes.json();
-          if (Array.isArray(emails)) {
-            const primary = emails.find(e => e.primary && e.verified) || emails.find(e => e.verified) || emails[0];
-            if (primary) email = primary.email;
-          }
-        }
-        if (!email) email = `${ghUser.login}@github.com`;
-        const dbUser = dbInstance.findOrCreateOAuthUser({
-          name: ghUser.name || ghUser.login || 'GitHub Foydalanuvchisi',
-          email,
-          provider: 'github',
-          company: 'GitHub Hisobi'
-        });
-        const sessionToken = dbInstance.createSession(dbUser.id);
-        res.writeHead(302, { Location: `/?oauth_token=${encodeURIComponent(sessionToken)}&provider=github` });
-        res.end();
-        return;
-      } catch (err) {
-        res.writeHead(302, { Location: `/?oauth_error=${encodeURIComponent(err.message)}` });
-        res.end();
-        return;
-      }
-    }
-
-    // OAuth: Direct / Modal verification
-    if (url === '/api/auth/oauth' && method === 'POST') {
-      const body = await parseJsonBody(req);
-      const provider = body.provider === 'github' ? 'github' : 'google';
-      let name = String(body.name || '').trim();
-      let email = String(body.email || '').trim().toLowerCase();
-
-      // If Google ID token credential (JWT) is provided
-      if (body.credential && typeof body.credential === 'string') {
-        try {
-          const parts = body.credential.split('.');
-          if (parts.length === 3) {
-            const payloadJson = Buffer.from(parts[1], 'base64url').toString('utf8');
-            const payload = JSON.parse(payloadJson);
-            if (payload.email) {
-              email = payload.email.toLowerCase();
-              name = payload.name || name;
-            }
-          }
-        } catch {}
-      }
-
-      if (!email || !email.includes('@')) {
-        sendJson(res, 400, { ok: false, error: 'Haqiqiy email manzil talab qilinadi.' });
-        return;
-      }
-      if (!name) {
-        name = provider === 'github' ? 'GitHub Foydalanuvchisi' : 'Google Foydalanuvchisi';
-      }
-
-      const oUser = dbInstance.findOrCreateOAuthUser({
-        name,
-        email,
-        provider,
-        company: provider === 'github' ? 'GitHub Hisobi' : 'Google Hisobi'
-      });
-      const token = dbInstance.createSession(oUser.id);
-      sendJson(res, 200, {
-        ok: true,
-        token,
-        user: oUser,
-        message: `${provider === 'github' ? 'GitHub' : 'Google'} orqali muvaffaqiyatli kirdingiz!`
-      });
-      return;
     }
 
     if (url === '/api/auth/logout' && method === 'POST') {

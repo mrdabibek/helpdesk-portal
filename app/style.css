@@ -57,12 +57,14 @@ dialog{border:1px solid var(--line);border-radius:18px;padding:26px;width:min(46
 .auth-gate-footer a{color:var(--muted);font-weight:600}
 .auth-gate-footer a:hover{color:var(--green)}
 
-/* OAuth Divider & Animations */
+/* Google Auth & Divider */
 .auth-divider{display:flex;align-items:center;margin:22px 0 16px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line)}
 .auth-divider span{padding:0 12px}
 
-.oauth-buttons{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.google-auth-box{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;align-items:stretch}
+#g_id_signin_gate{display:flex;justify-content:center;min-height:44px}
+#g_id_signin_gate:empty{display:none}
 .oauth-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:46px;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;border:1px solid var(--line);background:#ffffff;color:var(--ink);cursor:pointer;transition:all .25s cubic-bezier(0.16,1,0.3,1);overflow:hidden}
 .oauth-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transition:left .6s ease}
 .oauth-btn:hover::before{left:100%}
@@ -70,13 +72,10 @@ dialog{border:1px solid var(--line);border-radius:18px;padding:26px;width:min(46
 .oauth-btn:active{transform:translateY(0) scale(.99)}
 .oauth-btn.google-btn{background:#ffffff;color:#3c4043;border-color:#dadce0}
 .oauth-btn.google-btn:hover{border-color:#4285F4;background:#f8faff;box-shadow:0 6px 16px rgba(66,133,244,.15)}
-.oauth-btn.github-btn{background:#24292e;color:#ffffff;border-color:#24292e}
-.oauth-btn.github-btn:hover{background:#1b1f23;border-color:#1b1f23;box-shadow:0 6px 16px rgba(36,41,46,.25);color:#ffffff}
 .oauth-btn.loading{opacity:.85;pointer-events:none}
 .oauth-icon{flex-shrink:0;transition:transform .2s ease}
 .oauth-btn:hover .oauth-icon{transform:scale(1.1)}
 .oauth-spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.15);border-top-color:var(--green);border-radius:50%;animation:oauthSpin .7s linear infinite;display:inline-block;flex-shrink:0}
-.github-btn .oauth-spinner,.oauth-confirm-btn .oauth-spinner{border-color:rgba(255,255,255,.3);border-top-color:#ffffff}
 
 @keyframes oauthSpin{to{transform:rotate(360deg)}}
 @keyframes gateCardEntrance{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -84,11 +83,8 @@ dialog{border:1px solid var(--line);border-radius:18px;padding:26px;width:min(46
 
 .oauth-modal-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .oauth-modal-icon.google{background:#e8f0fe;border:1px solid #c2e7ff}
-.oauth-modal-icon.github{background:#24292e;color:#ffffff}
-.oauth-security-note{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;background:#f4f8f4;border:1px solid #dce8d4;font-size:11px;color:#2b573e;margin:14px 0 18px}
-.oauth-security-note .icon{width:16px;height:16px;color:var(--green);flex-shrink:0}
-.oauth-confirm-btn.google{background:#1a73e8;color:#ffffff;border:none}
-.oauth-confirm-btn.google:hover{background:#1557b0}
-.oauth-confirm-btn.github{background:#24292e;color:#ffffff;border:none}
-.oauth-confirm-btn.github:hover{background:#1b1f23}
+.google-guide-steps{display:flex;flex-direction:column;gap:12px;margin:16px 0;text-align:left}
+.guide-step{display:flex;gap:12px;align-items:flex-start;padding:12px;background:#f8faf8;border:1px solid var(--line);border-radius:8px;font-size:12px;line-height:1.5}
+.guide-step .step-num{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--green);color:#ffffff;font-weight:700;font-size:12px;flex-shrink:0}
+.guide-step code{background:#e9f3ed;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:11px;color:#17634d}
 

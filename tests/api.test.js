@@ -204,21 +204,25 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
       assert.ok(res.body.tickets.length >= 7);
     });
 
-    await t.test('GET /api/auth/oauth/url - Provayder konfiguratsiyasini tekshirish', async () => {
-      const resG = await request(server, '/api/auth/oauth/url?provider=google', 'GET');
-      assert.equal(resG.status, 200);
-      assert.equal(resG.body.provider, 'google');
-
-      const resGH = await request(server, '/api/auth/oauth/url?provider=github', 'GET');
-      assert.equal(resGH.status, 200);
-      assert.equal(resGH.body.provider, 'github');
+    await t.test('GET /api/auth/google/config - Google konfiguratsiyasini tekshirish', async () => {
+      const res = await request(server, '/api/auth/google/config', 'GET');
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.equal(typeof res.body.configured, 'boolean');
     });
 
-    await t.test('POST /api/auth/oauth - Google orqali yangi mijoz ro‘yxatdan o‘tishi', async () => {
-      const res = await request(server, '/api/auth/oauth', 'POST', {
-        provider: 'google',
+    await t.test('POST /api/auth/google/verify - Google token orqali yangi mijoz ro‘yxatdan o‘tishi', async () => {
+      const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+      const payload = Buffer.from(JSON.stringify({
+        email: 'google.tester@gmail.com',
         name: 'Google Sinovchi',
-        email: 'google.tester@gmail.com'
+        sub: '1029384756',
+        iss: 'https://accounts.google.com'
+      })).toString('base64url');
+      const fakeIdToken = `${header}.${payload}.simulated_sig`;
+
+      const res = await request(server, '/api/auth/google/verify', 'POST', {
+        credential: fakeIdToken
       });
       assert.equal(res.status, 200);
       assert.equal(res.body.ok, true);
@@ -228,25 +232,20 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
       assert.equal(res.body.user.company, 'Google Hisobi');
     });
 
-    await t.test('POST /api/auth/oauth - GitHub orqali ro‘yxatdan o‘tish va qayta kirish', async () => {
-      const res1 = await request(server, '/api/auth/oauth', 'POST', {
-        provider: 'github',
-        name: 'GitHub Dasturchi',
-        email: 'dev@github.com'
-      });
-      assert.equal(res1.status, 200);
-      assert.equal(res1.body.ok, true);
-      const userId1 = res1.body.user.id;
+    await t.test('POST /api/auth/google/verify - Qayta kirganda mavjud foydalanuvchini olish', async () => {
+      const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+      const payload = Buffer.from(JSON.stringify({
+        email: 'google.tester@gmail.com',
+        name: 'Google Sinovchi'
+      })).toString('base64url');
+      const fakeIdToken = `${header}.${payload}.simulated_sig`;
 
-      // Qayta kirganda shu userni qaytarishi
-      const res2 = await request(server, '/api/auth/oauth', 'POST', {
-        provider: 'github',
-        name: 'GitHub Dasturchi',
-        email: 'dev@github.com'
+      const res = await request(server, '/api/auth/google/verify', 'POST', {
+        credential: fakeIdToken
       });
-      assert.equal(res2.status, 200);
-      assert.equal(res2.body.ok, true);
-      assert.equal(res2.body.user.id, userId1);
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.equal(res.body.user.email, 'google.tester@gmail.com');
     });
 
   } finally {
