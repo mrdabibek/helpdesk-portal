@@ -128,7 +128,7 @@ async function handleApi(req, res, url) {
 
     // Google OAuth: Get Client ID configuration for Google Identity Services
     if (url === '/api/auth/google/config' && (method === 'GET' || method === 'HEAD')) {
-      const clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
+      const clientId = (process.env.GOOGLE_CLIENT_ID || '655195091707-92tjjfait863r3a4jdndpin1bgbfaj7h.apps.googleusercontent.com').trim();
       sendJson(res, 200, { ok: true, configured: Boolean(clientId), clientId });
       return;
     }
@@ -147,14 +147,34 @@ async function handleApi(req, res, url) {
           sendJson(res, 400, { ok: false, error: 'Noto‘g‘ri Google token formati.' });
           return;
         }
-        const payloadJson = Buffer.from(parts[1], 'base64url').toString('utf8');
-        const payload = JSON.parse(payloadJson);
-        const email = String(payload.email || '').trim().toLowerCase();
-        const name = String(payload.name || '').trim() || 'Google Foydalanuvchisi';
+
+        let email = '';
+        let name = '';
+
+        try {
+          const verifyRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`);
+          if (verifyRes.ok) {
+            const vData = await verifyRes.json();
+            if (vData.email) {
+              email = String(vData.email).trim().toLowerCase();
+              name = String(vData.name || '').trim();
+            }
+          }
+        } catch {}
+
+        if (!email) {
+          const payloadJson = Buffer.from(parts[1], 'base64url').toString('utf8');
+          const payload = JSON.parse(payloadJson);
+          email = String(payload.email || '').trim().toLowerCase();
+          name = String(payload.name || '').trim();
+        }
+
         if (!email || !email.includes('@')) {
           sendJson(res, 400, { ok: false, error: 'Google hisobida email topilmadi.' });
           return;
         }
+        if (!name) name = 'Google Foydalanuvchisi';
+
         const gUser = dbInstance.findOrCreateOAuthUser({
           name,
           email,
@@ -177,7 +197,7 @@ async function handleApi(req, res, url) {
 
     // OAuth: Direct Google redirect
     if (url === '/api/auth/oauth/google' && method === 'GET') {
-      const clientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
+      const clientId = (process.env.GOOGLE_CLIENT_ID || '655195091707-92tjjfait863r3a4jdndpin1bgbfaj7h.apps.googleusercontent.com').trim();
       const base = getAppBaseUrl(req);
       if (!clientId) {
         res.writeHead(302, { Location: `/?oauth_error=not_configured&provider=google` });
@@ -209,7 +229,7 @@ async function handleApi(req, res, url) {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
             code,
-            client_id: (process.env.GOOGLE_CLIENT_ID || '').trim(),
+            client_id: (process.env.GOOGLE_CLIENT_ID || '655195091707-92tjjfait863r3a4jdndpin1bgbfaj7h.apps.googleusercontent.com').trim(),
             client_secret: (process.env.GOOGLE_CLIENT_SECRET || '').trim(),
             redirect_uri: redirectUri,
             grant_type: 'authorization_code'
