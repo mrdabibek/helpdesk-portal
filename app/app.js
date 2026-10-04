@@ -154,9 +154,9 @@ function oauthButtonsHtml() {
   return `<div class="auth-divider"><span>yoki Google orqali</span></div>
   <div class="google-auth-box">
     <div id="g_id_signin_gate"></div>
-    <button type="button" class="btn oauth-btn google-btn" data-action="google-login">
+    <button type="button" id="google-fallback-btn" class="btn oauth-btn google-btn" data-action="google-login" style="${googleAuthClientReady ? 'display:none;' : ''}">
       ${googleIcon()}
-      <span>Google hisobi orqali kirish</span>
+      <span>Google orqali davom etish</span>
     </button>
   </div>`;
 }
@@ -201,9 +201,12 @@ function setupGoogleIdentityServices() {
 
 function renderGoogleSignInButton() {
   const container = document.getElementById('g_id_signin_gate');
+  const fallbackBtn = document.getElementById('google-fallback-btn') || document.querySelector('.google-btn');
   if (!container || !window.google?.accounts?.id || !googleClientId) return;
   try {
     container.innerHTML = '';
+    const parentWidth = container.parentElement ? container.parentElement.clientWidth : 380;
+    const btnWidth = Math.max(280, Math.min(parentWidth || 380, 400));
     window.google.accounts.id.renderButton(container, {
       theme: 'outline',
       size: 'large',
@@ -211,8 +214,11 @@ function renderGoogleSignInButton() {
       text: 'continue_with',
       shape: 'rectangular',
       logo_alignment: 'left',
-      width: 320
+      width: btnWidth
     });
+    if (fallbackBtn) {
+      fallbackBtn.style.display = 'none';
+    }
     window.google.accounts.id.prompt();
   } catch {}
 }
