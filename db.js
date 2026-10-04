@@ -138,6 +138,37 @@ function createDatabase(filePath = defaultDbPath) {
       };
     },
 
+    findOrCreateOAuthUser({ name, email, provider = 'google', company = '', avatar_color = 'mint' }) {
+      const trimmedEmail = String(email || '').trim().toLowerCase();
+      let trimmedName = String(name || '').trim();
+      if (!trimmedEmail || !trimmedEmail.includes('@')) {
+        throw new Error('OAuth foydalanuvchisi uchun to‘g‘ri email topilmadi.');
+      }
+      if (!trimmedName) {
+        trimmedName = provider === 'github' ? 'GitHub Foydalanuvchisi' : 'Google Foydalanuvchisi';
+      }
+      const existing = db.prepare('SELECT id, name, email, role, company, avatar_color FROM users WHERE email = ?').get(trimmedEmail);
+      if (existing) {
+        return existing;
+      }
+      const randomSecret = crypto.randomBytes(32).toString('hex');
+      const { hash, salt } = hashPassword(randomSecret);
+      const userCompany = company || (provider === 'github' ? 'GitHub' : 'Google');
+      const now = Date.now();
+      const result = db.prepare(`
+        INSERT INTO users (name, email, password_hash, salt, role, company, avatar_color, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(trimmedName, trimmedEmail, hash, salt, 'client', userCompany, avatar_color, now);
+      return {
+        id: Number(result.lastInsertRowid),
+        name: trimmedName,
+        email: trimmedEmail,
+        role: 'client',
+        company: userCompany,
+        avatar_color
+      };
+    },
+
     verifyUser({ email, password }) {
       const trimmed = String(email || '').trim().toLowerCase();
       if (!trimmed || !password) return null;

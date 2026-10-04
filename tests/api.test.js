@@ -204,6 +204,51 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
       assert.ok(res.body.tickets.length >= 7);
     });
 
+    await t.test('GET /api/auth/oauth/url - Provayder konfiguratsiyasini tekshirish', async () => {
+      const resG = await request(server, '/api/auth/oauth/url?provider=google', 'GET');
+      assert.equal(resG.status, 200);
+      assert.equal(resG.body.provider, 'google');
+
+      const resGH = await request(server, '/api/auth/oauth/url?provider=github', 'GET');
+      assert.equal(resGH.status, 200);
+      assert.equal(resGH.body.provider, 'github');
+    });
+
+    await t.test('POST /api/auth/oauth - Google orqali yangi mijoz ro‘yxatdan o‘tishi', async () => {
+      const res = await request(server, '/api/auth/oauth', 'POST', {
+        provider: 'google',
+        name: 'Google Sinovchi',
+        email: 'google.tester@gmail.com'
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.ok, true);
+      assert.ok(res.body.token);
+      assert.equal(res.body.user.email, 'google.tester@gmail.com');
+      assert.equal(res.body.user.role, 'client');
+      assert.equal(res.body.user.company, 'Google Hisobi');
+    });
+
+    await t.test('POST /api/auth/oauth - GitHub orqali ro‘yxatdan o‘tish va qayta kirish', async () => {
+      const res1 = await request(server, '/api/auth/oauth', 'POST', {
+        provider: 'github',
+        name: 'GitHub Dasturchi',
+        email: 'dev@github.com'
+      });
+      assert.equal(res1.status, 200);
+      assert.equal(res1.body.ok, true);
+      const userId1 = res1.body.user.id;
+
+      // Qayta kirganda shu userni qaytarishi
+      const res2 = await request(server, '/api/auth/oauth', 'POST', {
+        provider: 'github',
+        name: 'GitHub Dasturchi',
+        email: 'dev@github.com'
+      });
+      assert.equal(res2.status, 200);
+      assert.equal(res2.body.ok, true);
+      assert.equal(res2.body.user.id, userId1);
+    });
+
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
