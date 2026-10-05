@@ -145,7 +145,7 @@ function createDatabase(filePath = defaultDbPath) {
         throw new Error('OAuth foydalanuvchisi uchun to‘g‘ri email topilmadi.');
       }
       if (!trimmedName) {
-        trimmedName = provider === 'github' ? 'GitHub Foydalanuvchisi' : 'Google Foydalanuvchisi';
+        trimmedName = 'Google Foydalanuvchisi';
       }
       const existing = db.prepare('SELECT id, name, email, role, company, avatar_color FROM users WHERE email = ?').get(trimmedEmail);
       if (existing) {
@@ -153,7 +153,7 @@ function createDatabase(filePath = defaultDbPath) {
       }
       const randomSecret = crypto.randomBytes(32).toString('hex');
       const { hash, salt } = hashPassword(randomSecret);
-      const userCompany = company || (provider === 'github' ? 'GitHub' : 'Google');
+      const userCompany = company || 'Google Hisobi';
       const now = Date.now();
       const result = db.prepare(`
         INSERT INTO users (name, email, password_hash, salt, role, company, avatar_color, created_at)
