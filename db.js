@@ -532,6 +532,8 @@ function applyFiltersAndSort(list, filter, search, sort) {
     result = result.filter(t => !['closed', 'solved'].includes(t.status) && t.due < Date.now());
   } else if (filter === 'closed') {
     result = result.filter(t => t.status === 'closed');
+  } else if (filter === 'all_with_closed' || filter === 'everything') {
+    // Keep all tickets including closed
   } else {
     result = result.filter(t => t.status !== 'closed');
   }

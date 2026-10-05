@@ -248,6 +248,48 @@ test('Haqiqiy REST API va SQLite Database testlari', async t => {
       assert.equal(res.body.user.email, 'google.tester@gmail.com');
     });
 
+    await t.test('POST /api/tickets va filter=all_with_closed - Murojaatlar bazada to‘liq saqlanadi va qaytariladi', async () => {
+      const res = await request(server, '/api/tickets', 'POST', {
+        title: 'Mening yangi muhim murojaatim',
+        category: 'Texnik muammo',
+        description: 'Tizimda hisobot yaratilmayapti, iltimos tekshiring.',
+        priority: 'urgent'
+      }, {
+        Authorization: `Bearer ${clientToken}`
+      });
+      assert.equal(res.status, 201);
+      assert.equal(res.body.ok, true);
+      const newId = res.body.ticket.id;
+
+      // GET with all_with_closed
+      const listRes = await request(server, '/api/tickets?filter=all_with_closed', 'GET', null, {
+        Authorization: `Bearer ${clientToken}`
+      });
+      assert.equal(listRes.status, 200);
+      assert.equal(listRes.body.ok, true);
+      assert.ok(listRes.body.tickets.some(t => t.id === newId && t.title === 'Mening yangi muhim murojaatim'));
+    });
+
+    await t.test('POST /api/tickets - Admin murojaat yaratganda ham saqlanadi va admin ro‘yxatida ko‘rinadi', async () => {
+      const res = await request(server, '/api/tickets', 'POST', {
+        title: 'Admin tomonidan ochilgan sinov murojaati',
+        category: 'Hisobotlar',
+        description: 'Admin paneldan yuborilgan ichki murojaat tavsifi.',
+        priority: 'normal'
+      }, {
+        Authorization: `Bearer ${adminToken}`
+      });
+      assert.equal(res.status, 201);
+      assert.equal(res.body.ok, true);
+      const adminTicketId = res.body.ticket.id;
+
+      const adminList = await request(server, '/api/tickets?filter=all_with_closed', 'GET', null, {
+        Authorization: `Bearer ${adminToken}`
+      });
+      assert.equal(adminList.status, 200);
+      assert.ok(adminList.body.tickets.some(t => t.id === adminTicketId));
+    });
+
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
