@@ -1,8 +1,10 @@
 # Yordam — Figma import va topshirish
 
-Hozirgi paket Figma native fayli emas. Figma ko‘rish havolasi va `.fig` nusxasi hali yaratilmagan.
+Figma fayli: https://www.figma.com/design/F6jA7C3f1t0cdEBgUWyKBf
 
-1. Figma’da “Yordam — Helpdesk / Orzuqulov Davlatbek” dizayn faylini yarating.
+Unda hozir 4 ta native ekran, tokenlar va asosiy komponentlar bor. Qolgan ekranlar va prototip oqimlari hali tugallanmagan; `.fig` nusxa eksport qilinmagan. 22 ta SVG ko‘rigi: `/app/design/index.html`. Amaldagi holat: `docs/10_Ekranlar_Korigi_va_Figma.md`.
+
+1. Yuqoridagi mavjud Figma faylini oching. Yangi nusxa yaratish shart emas.
 2. 09_Figma_Fayl_Strukturasi.md dagi 8 sahifani yarating.
 3. `yordam-ui-kit.svg` ni Design System sahifasiga import qiling.
 4. `screens/A-01.svg` … `A-09.svg` ni Agent Desktop sahifasiga, `M-01.svg` … `M-10.svg` ni Client Mobile sahifasiga import qiling. SVGlar statik, tahrirlanadigan vektor va matn qatlamlaridan iborat.
