@@ -25,7 +25,7 @@ Agent paneli: `/#dashboard`. Mijoz mobil portali: `/#client/home`. Materiallar: 
 `Yordam-design-handoff.zip`: Figma importi va handoff uchun umumiy paket.
 
 ## Tugallanmagan tashqi natijalar
-Figma sessiyasi ulanmagan: Figma ko‘rish havolasi va haqiqiy `.fig` nusxasi yaratilmagan.
+[Figma fayli](https://www.figma.com/design/F6jA7C3f1t0cdEBgUWyKBf) mavjud: unda 4 ta native ekran va asosiy dizayn komponentlari yaratildi. Qolgan ekranlar, prototip bog‘lanishlari va haqiqiy `.fig` nusxasi hali tugallanmagan.
 SVGlarni import qilib, Auto Layout, component variants va prototype links ni Figma’da tuzing; ko‘rish havolasi va native nusxani o‘sha yerda eksport qiling. Yo‘riqnoma: `figma_assets/FIGMA_QOLLANMA.md`.
 Haqiqiy foydalanuvchi testi o‘tkazilmagan. Tadqiqot farazlari va test blanki natija sifatida ko‘rsatilmaydi. Ball kafolatlanmaydi; topshiriqning maksimal bahosi 100.
 
@@ -38,3 +38,8 @@ Hozirgi ishchi server: http://localhost:3002. Server Windows fon jarayonida ishl
 ## Deploy
 Frontend Vercel uchun `npm run build:frontend` → `dist`; buildda BACKEND_URL kerak. Backend Render/Koyeb uchun `npm run start:backend`, production’da 0.0.0.0 va hosting PORT’i ishlatiladi. CORS_ORIGINS aniq frontend domenlarini oladi. `/health`, `/ping`, `/api/health` monitor uchun tayyor.
 Ildizda vercel.json, render.yaml, Dockerfile, .dockerignore va kalitsiz .env.example bor. Bosqichlar, muhit qiymatlari va UptimeRobot: [DEPLOY.md](DEPLOY.md).
+
+
+## 22 ta ekran ko‘rigi
+
+`/app/design/index.html` sahifasida agent, mijoz va kirish holatlarini filtrlab ko‘rish mumkin. U `Loyiha materiallari` sahifasiga ham ulangan. Dizayn holati: [10_Ekranlar_Korigi_va_Figma.md](docs/10_Ekranlar_Korigi_va_Figma.md).
