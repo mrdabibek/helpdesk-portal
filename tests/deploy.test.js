@@ -70,6 +70,22 @@ test('production health, CORS va yopiq statik fayllar',async t=>{
       await t.test('server va env fayllari ommaviy berilmaydi',async()=>{
         for(const endpoint of ['/.env','/server.js'])assert.equal((await request(server,endpoint)).status,403);
       });
+      await t.test('22 ekran ko‘rigi va barcha SVGlar hisobsiz ochiladi',async()=>{
+        const page=await request(server,'/app/design/index.html');
+        assert.equal(page.status,200);
+        assert.match(page.headers['content-type'],/text\/html/);
+        const json=page.body.match(/const screens=(\[.*?\]);let current=/);
+        assert.ok(json,'screen inventory is available');
+        const screens=JSON.parse(json[1]);
+        assert.equal(screens.length,22);
+        assert.equal(new Set(screens.map(s=>s.key)).size,22);
+        for(const screen of screens){
+          const image=await request(server,`/figma_assets/screens/${screen.key}.svg`);
+          assert.equal(image.status,200,screen.key);
+          assert.match(image.headers['content-type'],/image\/svg\+xml/);
+          assert.match(image.body,/<svg/);
+        }
+      });
     }finally{await new Promise(resolve=>server.close(resolve));}
   });
 });
@@ -79,7 +95,7 @@ test('frontend build faqat ommaviy aktivlar va API manzilini chiqaradi',async()=
   const output=await fs.mkdtemp(path.join(os.tmpdir(),'yordam-deploy-'));
   try{
     await withEnv({BACKEND_URL:'https://example.onrender.com',NODE_ENV:'production',VERCEL:undefined},()=>buildFrontend(output));
-    for(const file of ['index.html','app/index.html','app/config.js','app/app.js','app/style.css','app/ai.js','app/ai.css','docs/07_Handoff_Spetsifikatsiyasi.md','figma_assets/yordam-ui-kit.svg'])assert.ok((await fs.stat(path.join(output,file))).isFile(),file);
+    for(const file of ['index.html','app/index.html','app/config.js','app/app.js','app/style.css','app/ai.js','app/ai.css','app/design/index.html','docs/07_Handoff_Spetsifikatsiyasi.md','docs/10_Ekranlar_Korigi_va_Figma.md','figma_assets/yordam-ui-kit.svg','figma_assets/screens/S-01.svg','figma_assets/screens/S-02.svg','figma_assets/screens/S-03.svg'])assert.ok((await fs.stat(path.join(output,file))).isFile(),file);
     const config=await fs.readFile(path.join(output,'app/config.js'),'utf8');
     const context=vm.createContext({});vm.runInContext(config,context);
     assert.equal(context.YORDAM_CONFIG.apiBase,'https://example.onrender.com');

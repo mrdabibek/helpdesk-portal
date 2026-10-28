@@ -1,9 +1,14 @@
 # Figma fayl strukturasi va topshirish holati
 
 ## Paket holati
-Tayyor: mahalliy bosiladigan prototip, 19 ekran/holat SVGlari, wireframe SVGlari, UI kit, hujjatlar, texnik test, oldin-keyin rasmlar.
-Hali tayyor emas: Figma ko‘rish havolasi, native .fig fayl, native component variants va Figma prototip bog‘lanishlari. Ular Figma sessiyasida yaratiladi. SVG faylni .fig deb qayta nomlash mumkin emas.
-Haqiqiy foydalanuvchi testi ham hali o‘tkazilmagan.
+
+Ekranlar ko‘rigi: `/app/design/index.html` — 9 agent, 10 mijoz va 3 kirish holati, jami 22 SVG.
+
+Figma fayli: https://www.figma.com/design/F6jA7C3f1t0cdEBgUWyKBf
+
+Faylda 4 ta native ekran, rang va oraliq tokenlari, matn uslublari, tugma va status komponentlari yaratildi. Qolgan ekranlarni yozish Starter MCP limiti sabab tugallanmagan. Dastlabki dashboarddagi SLA diagrammasining joylashishini tuzatish ham qolgan.
+
+Native `.fig` nusxa va to‘liq prototip bog‘lanishlari hali tayyor emas. SVG ko‘rigi Figma ichidagi yakunlangan native dizayn o‘rnini bosmaydi. Haqiqiy foydalanuvchi testi hali o‘tkazilmagan.
 
 ## Tavsiya etilgan sahifalar
 01 Cover & Brief
